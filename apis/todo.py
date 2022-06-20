@@ -14,20 +14,15 @@ def get_all_todos():
     return TodoCore.get_all_todos()
 
 
-@router.post(
-    "/",
-    response_model=TaskResponse,
-    status_code=201,
-    responses={201: {"description": "Created", "model": TaskResponse}},
+@router.post("/", response_model=TaskResponse, status_code=201, responses={
+    201: {"description": "Created", "model": TaskResponse}
+    },
 )
 def create_todo(task: TaskRequest):
     return TodoCore.create_todo(task)
 
 
-@router.post(
-    "/{id}",
-    status_code=200,
-    responses={
+@router.post( "/{id}", status_code=200, responses={
         404: {"description": "Task not found"},
         200: {"description": "Successful", "model": TaskResponse},
     },
@@ -36,11 +31,7 @@ def get_todo(id: str, response: Response):
     return TodoCore.get_todo(id, response)
 
 
-@router.put(
-    "/{id}",
-    response_model=TaskResponse,
-    status_code=200,
-    responses={
+@router.put("/{id}", response_model=TaskResponse, status_code=200, responses={
         404: {"description": "Task not found"},
         200: {"description": "Updated", "model": TaskResponse},
     },
@@ -49,10 +40,7 @@ def update_todo(id: str, task: UpdateTaskRequest, response: Response):
     return TodoCore.update_todo(id, task, response)
 
 
-@router.delete(
-    "/{id}",
-    status_code=200,
-    responses={
+@router.delete("/{id}", status_code=200, responses={
         404: {"description": "Task not found"},
         200: {
             "description": "Deleted",
