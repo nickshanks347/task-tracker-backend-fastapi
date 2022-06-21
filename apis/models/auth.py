@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 class User(BaseModel):
     username: str
+    id: str
     disabled: bool | None = None
 
 class UserInDB(User):

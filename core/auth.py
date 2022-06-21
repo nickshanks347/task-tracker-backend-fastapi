@@ -13,6 +13,13 @@ fake_users_db = {
     "nick": {
         "username": "nick",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        "id": "1",
+        "disabled": False,
+    },
+    "test": {
+        "username": "test",
+        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        "id": "2",
         "disabled": False,
     },
 }
@@ -44,6 +51,7 @@ class AuthCore(object):
         else:
             expire = datetime.utcnow() + timedelta(minutes=15)
         to_encode.update({"exp": expire})
+        to_encode.update({"iat": datetime.utcnow()})
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
