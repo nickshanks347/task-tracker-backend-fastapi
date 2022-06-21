@@ -1,4 +1,5 @@
 import uuid
+from fastapi import HTTPException
 
 todos = []
 todos.append({"id": "1", "title": "Task 1", "done": False, "colour": "red"})
@@ -16,27 +17,24 @@ class TodoCore(object):
         todos.append(task)
         return task
 
-    def get_todo(id, response):
+    def get_todo(id):
         for todo in todos:
             if todo["id"] == id:
                 return todo
-        response.status_code = 404
-        return {"error": "Task not found"}
+        raise HTTPException(status_code=404, detail="Task not found")
 
-    def update_todo(id, task, response):
+    def update_todo(id, task):
         for todo in todos:
             if todo["id"] == id:
                 for k, v in task:
                     if v is not None:
                         todo[k] = v
                 return todo
-        response.status_code = 404
-        return {"error": "Task not found"}
+        raise HTTPException(status_code=404, detail="Task not found")
 
-    def delete_todo(id, response):
+    def delete_todo(id):
         for todo in todos:
             if todo["id"] == id:
                 todos.remove(todo)
                 return {"message": "Task deleted"}
-        response.status_code = 404
-        return {"error": "Task not found"}
+        raise HTTPException(status_code=404, detail="Task not found")

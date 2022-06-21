@@ -25,8 +25,8 @@ def create_todo(task: TaskRequest):
         200: {"description": "Successful", "model": TaskResponse},
     },
 )
-def get_todo(id: str, response: Response):
-    return TodoCore.get_todo(id, response)
+def get_todo(id: str):
+    return TodoCore.get_todo(id)
 
 
 @router.put("/{id}", response_model=TaskResponse, status_code=200, responses={
@@ -34,8 +34,8 @@ def get_todo(id: str, response: Response):
         200: {"description": "Updated", "model": TaskResponse},
     },
 )
-def update_todo(id: str, task: UpdateTaskRequest, response: Response):
-    return TodoCore.update_todo(id, task, response)
+def update_todo(id: str, task: UpdateTaskRequest):
+    return TodoCore.update_todo(id, task)
 
 
 @router.delete("/{id}", status_code=200, responses={
@@ -46,5 +46,5 @@ def update_todo(id: str, task: UpdateTaskRequest, response: Response):
         },
     },
 )
-def delete_todo(id: str, response: Response):
-    return TodoCore.delete_todo(id, response)
+def delete_todo(id: str):
+    return TodoCore.delete_todo(id)
