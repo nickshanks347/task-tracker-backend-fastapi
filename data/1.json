@@ -1,18 +1,26 @@
 {
     "1": {
-        "id": "string",
-        "title": "string",
-        "done": true,
-        "colour": "string",
-        "created_at": null,
+        "id": "1",
+        "title": "Task 1",
+        "done": false,
+        "colour": "red",
+        "created_at": "2020-01-01T00:00:00.000Z",
         "updated_at": "2022-06-21 16:58:12.774184"
     },
-    "7cc8e2c1-d491-4da8-b934-c013952e6f27": {
-        "id": "7cc8e2c1-d491-4da8-b934-c013952e6f27",
+    "2": {
+        "id": "2",
         "title": "string",
-        "done": true,
+        "done": false,
         "colour": "string",
-        "created_at": "2022-06-21 16:04:44.216364",
-        "updated_at": "2022-06-21 16:04:44.216364"
+        "created_at": "2020-01-01T00:00:00.000Z",
+        "updated_at": "2022-06-21 18:04:02.544632"
+    },
+    "3": {
+        "id": "3",
+        "title": "Task 3",
+        "done": false,
+        "colour": "blue",
+        "created_at": "2020-01-01T00:00:00.000Z",
+        "updated_at": "2022-06-21 16:58:12.774184"
     }
 }
