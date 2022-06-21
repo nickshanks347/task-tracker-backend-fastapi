@@ -4,11 +4,9 @@ from .models.todo import TaskRequest, TaskResponse, UpdateTaskRequest
 
 router = APIRouter()
 
-
-@router.get(
-    "/",
-    status_code=200,
-    responses={200: {"description": "Success", "model": TaskResponse}},
+@router.get("/", status_code=200, responses={
+    200: {"description": "Success", "model": TaskResponse}
+    },
 )
 def get_all_todos():
     return TodoCore.get_all_todos()
