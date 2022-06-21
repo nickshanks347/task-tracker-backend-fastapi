@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends
 from core.todo import TodoCore
 from core.auth import AuthCore
 from .models.todo import TaskRequest, TaskResponse, UpdateTaskRequest
