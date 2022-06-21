@@ -1,0 +1,14 @@
+{
+  "nick": {
+    "username": "nick",
+    "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+    "id": "1",
+    "disabled": false
+  },
+  "test": {
+    "username": "test",
+    "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+    "id": "2",
+    "disabled": false
+  }
+}
