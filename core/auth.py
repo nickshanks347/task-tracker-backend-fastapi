@@ -6,23 +6,33 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
 from apis.models.auth import User, TokenData, UserInDB
+from data import Config
+
+SECRET_KEY = Config.SECRET_KEY
+ALGORITHM = Config.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = Config.ACCESS_TOKEN_EXPIRE_MINUTES
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
 class AuthCore(object):
-    def get_user_db():
-        with open(Path(__file__).parent.parent / "data" / "users.json", "r") as f:
-            return json.load(f)
+    def file_operations(operation, data=None):
+            with open(Path(__file__).parent.parent / "data" / "users.json", "r+") as f:   
+                if operation == "read":
+                    return json.load(f)
+                else:
+                    f.seek(0)
+                    json.dump(data, f, indent=4)
+                    f.truncate()
+                    f.close()
+                    return True
 
     def verify_password(plain_password, hashed_password):
         return pwd_context.verify(plain_password, hashed_password)
+    
+    def hash_password(plain_password):
+        return pwd_context.hash(plain_password)
 
     def authenticate_user(user_db, username: str, password: str):
         user = AuthCore.get_user(user_db, username)
@@ -62,7 +72,7 @@ class AuthCore(object):
             token_data = TokenData(username=username)
         except JWTError:
             raise credentials_exception
-        user = AuthCore.get_user(AuthCore.get_user_db(), username=token_data.username)
+        user = AuthCore.get_user(AuthCore.file_operations("read"), username=token_data.username)
         if user is None:
             raise credentials_exception
         return user
