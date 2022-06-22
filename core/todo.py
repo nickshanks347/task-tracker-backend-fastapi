@@ -4,6 +4,7 @@ from json import JSONDecodeError
 from pathlib import Path
 from fastapi import HTTPException
 import datetime
+from cryptography import fernet
 
 
 class TodoCore(object):

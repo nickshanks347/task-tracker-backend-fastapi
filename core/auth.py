@@ -8,10 +8,6 @@ from fastapi import Depends, HTTPException
 from apis.models.auth import User, TokenData, UserInDB
 from data import Config
 
-SECRET_KEY = Config.SECRET_KEY
-ALGORITHM = Config.ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = Config.ACCESS_TOKEN_EXPIRE_MINUTES
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -50,7 +46,7 @@ class AuthCore(object):
             expire = datetime.utcnow() + timedelta(minutes=15)
         to_encode.update({"exp": expire})
         to_encode.update({"iat": datetime.utcnow()})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt.encode(to_encode, Config.JWT_SECRET_KEY, algorithm=Config.ALGORITHM)
         return encoded_jwt
 
     def get_user(db, username: str):
@@ -65,7 +61,7 @@ class AuthCore(object):
             headers={"WWW-Authenticate": "Bearer"},
         )
         try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            payload = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=[Config.ALGORITHM])
             username: str = payload.get("sub")
             if username is None:
                 raise credentials_exception

@@ -50,6 +50,9 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+test.json
+test1.json
+test.py
 
 # Translations
 *.mo

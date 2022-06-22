@@ -8,21 +8,23 @@ import uuid
 
 router = APIRouter()
 
-ACCESS_TOKEN_EXPIRE_MINUTES = Config.ACCESS_TOKEN_EXPIRE_MINUTES
-
 @router.post("/register", status_code=201, response_model=User)
 def register(form_data: OAuth2PasswordRequestForm = Depends()):
-    user_db = AuthCore.file_operations("read")
-    if form_data.username in user_db:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    user_db[form_data.username] = {
-        "username": form_data.username,
-        "hashed_password": AuthCore.hash_password(form_data.password),
-        "id": str(uuid.uuid4()),
-        "disabled": False,
-    }
-    AuthCore.file_operations("write", user_db)
-    return User(username=form_data.username, id=user_db[form_data.username]["id"], disabled=user_db[form_data.username]["disabled"])
+    if Config.ENABLE_REGISTRATIONS:
+        user_db = AuthCore.file_operations("read")
+        if form_data.username in user_db:
+            raise HTTPException(status_code=400, detail="Username already registered")
+        user_db[form_data.username] = {
+            "username": form_data.username,
+            "hashed_password": AuthCore.hash_password(form_data.password),
+            "id": str(uuid.uuid4()),
+            "disabled": False,
+        }
+        AuthCore.file_operations("write", user_db)
+        return User(username=form_data.username, id=user_db[form_data.username]["id"], disabled=user_db[form_data.username]["disabled"])
+    else:
+        raise HTTPException(status_code=400, detail="Registrations are disabled")
+
 
 @router.post("/token", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -35,7 +37,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=Config.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
