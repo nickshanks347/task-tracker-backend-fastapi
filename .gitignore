@@ -148,6 +148,13 @@ cython_debug/
 postman.json
 generate_postman.py
 
+# IDE
+/.vscode
+
+# Private stuff
+data/**
+!data/__init__.py
+
 # PyCharm
 #  JetBrains specific template is maintainted in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

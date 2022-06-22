@@ -7,5 +7,4 @@ app.include_router(router, prefix="/api")
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run("main:app", reload=True)
