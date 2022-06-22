@@ -152,8 +152,8 @@ generate_postman.py
 /.vscode
 
 # Private stuff
-data/**
-!data/__init__.py
+/data/**
+!/data/__init__.py
 
 # PyCharm
 #  JetBrains specific template is maintainted in a separate JetBrains.gitignore that can
@@ -161,3 +161,4 @@ data/**
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+data/users.json
