@@ -11,13 +11,19 @@ from .fileops import FileOps
 class TodoCore(object):
     task_not_found = HTTPException(status_code=404, detail="Task not found")
     incorrect_format = HTTPException(
-        status_code=404, detail="Incorrect tasks JSON format"
+        status_code=404, detail="Tasks JSON file has wrong format or does not exist"
     )
     def file_operations(current_user, operation, data=None):
         try:
-            with open(Path(__file__).parent.parent / "data" / f"{current_user.id}.json", "rb+") as f:
-                return FileOps.file_operations_encrypted(operation, f, data) if Config.ENCRYPT_JSON else FileOps.file_operations_plain(operation, f, data)
+            if Config.ENCRYPT_JSON:
+                with open(Path(__file__).parent.parent / "data" / f"{current_user.id}.json", "rb+") as f:
+                    return FileOps.file_operations_encrypted(operation, f, data)
+            else:
+                with open(Path(__file__).parent.parent / "data" / f"{current_user.id}.json", "r+") as f:
+                    return FileOps.file_operations_plain(operation, f, data)
         except JSONDecodeError:
+            raise TodoCore.incorrect_format
+        except FileNotFoundError:
             raise TodoCore.incorrect_format
 
     def get_all_todos(current_user):
@@ -41,23 +47,32 @@ class TodoCore(object):
         return task
 
     def get_todo(id, current_user):
-        todos = TodoCore.file_operations(current_user, "read")
-        task = todos[id]
-        return task
+        try:
+            todos = TodoCore.file_operations(current_user, "read")
+            task = todos[id]
+            return task
+        except KeyError:
+            raise TodoCore.task_not_found
 
     def update_todo(id, body, current_user):
-        todos = TodoCore.file_operations(current_user, "read")
-        todo = todos[id]
-        for k, v in body:
-            if v is not None:
-                todo[k] = v
-        todo["updated_at"] = str(datetime.datetime.now())
-        todos[id] = todo
-        TodoCore.file_operations(current_user, "write", todos)
-        return todo
+        try:
+            todos = TodoCore.file_operations(current_user, "read")
+            todo = todos[id]
+            for k, v in body:
+                if v is not None:
+                    todo[k] = v
+            todo["updated_at"] = str(datetime.datetime.now())
+            todos[id] = todo
+            TodoCore.file_operations(current_user, "write", todos)
+            return todo
+        except KeyError:
+            raise TodoCore.task_not_found
 
     def delete_todo(id, current_user):
-        todos = TodoCore.file_operations(current_user, "read")
-        del todos[id]
-        TodoCore.file_operations(current_user, "write", todos)
-        return {"message": "Task deleted"}
+        try:
+            todos = TodoCore.file_operations(current_user, "read")
+            del todos[id]
+            TodoCore.file_operations(current_user, "write", todos)
+            return {"message": "Task deleted"}
+        except KeyError:
+            raise TodoCore.task_not_found
