@@ -17,6 +17,3 @@ class UpdateTaskRequest(BaseModel):
     title: str | None = None
     done: bool | None = None
     colour: str | None = None
-    id: str | None = None
-    created_at: str | None = None
-    updated_at: str | None = None
