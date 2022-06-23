@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import json
+from json import JSONDecodeError
 from pathlib import Path
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
@@ -7,6 +8,8 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
 from apis.models.auth import User, TokenData, UserInDB
 from data import Config
+import base64
+from cryptography.fernet import Fernet
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
@@ -14,15 +17,33 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class AuthCore(object):
     def file_operations(operation, data=None):
-            with open(Path(__file__).parent.parent / "data" / "users.json", "r+") as f:   
+        key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode())
+        fernet = Fernet(key)
+        try:
+            with open(Path(__file__).parent.parent / "data" / "users.json", "rb+") as f:   
                 if operation == "read":
-                    return json.load(f)
+                    # return json.load(f)
+                    data = f.read().decode()
+                    data = json.loads(data)["encrypted"]
+                    decrypted = fernet.decrypt(data.encode()).decode()
+                    return json.loads(decrypted)
                 else:
+                    # f.seek(0)
+                    # json.dump(data, f, indent=4)
+                    # f.truncate()
+                    # f.close()
+                    # return True
                     f.seek(0)
-                    json.dump(data, f, indent=4)
+                    encrypted = json.dumps(data).encode()
+                    encrypted = fernet.encrypt(encrypted).decode()
+                    print(encrypted)
+                    write = {"encrypted": encrypted}
+                    f.write(json.dumps(write).encode())
                     f.truncate()
                     f.close()
                     return True
+        except JSONDecodeError:
+            raise AuthCore.incorrect_format
 
     def verify_password(plain_password, hashed_password):
         return pwd_context.verify(plain_password, hashed_password)
