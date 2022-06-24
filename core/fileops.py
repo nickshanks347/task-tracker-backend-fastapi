@@ -21,7 +21,7 @@ class FileOps(object):
                 encrypted = json.dumps(data).encode()
                 encrypted = FileOps.fernet.encrypt(encrypted).decode()
                 write = {"encrypted": encrypted}
-                f.write(json.dumps(write).encode())
+                f.write(json.dumps(write, indent=4).encode())
                 f.truncate()
                 f.close()
                 return True
@@ -39,7 +39,7 @@ class FileOps(object):
                 json.dump(data, f, indent=4)
                 f.truncate()
                 f.close()
-                # return True
+                return True
         except JSONDecodeError:
             return False
         except KeyError:
