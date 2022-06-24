@@ -6,9 +6,11 @@ from __init__ import Config
 import json
 import colorama
 
-parser = argparse.ArgumentParser(description='Decrypt and encrypt data files for backend')
-parser.add_argument('-d', '--decrypt', help='Decrypt data files', action='store_true')
-parser.add_argument('-e', '--encrypt', help='Encrypt data files', action='store_true')
+parser = argparse.ArgumentParser(
+    description="Decrypt and encrypt data files for backend"
+)
+parser.add_argument("-d", "--decrypt", help="Decrypt data files", action="store_true")
+parser.add_argument("-e", "--encrypt", help="Encrypt data files", action="store_true")
 args = parser.parse_args()
 
 key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode())

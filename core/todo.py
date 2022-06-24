@@ -3,7 +3,6 @@ from json import JSONDecodeError
 from pathlib import Path
 from fastapi import HTTPException
 import datetime
-from cryptography.fernet import Fernet
 from data import Config
 from .fileops import FileOps
 
@@ -13,13 +12,20 @@ class TodoCore(object):
     incorrect_format = HTTPException(
         status_code=404, detail="Tasks JSON file has wrong format or does not exist"
     )
+
     def file_operations(current_user, operation, data=None):
         try:
             if Config.ENCRYPT_JSON:
-                with open(Path(__file__).parent.parent / "data" / f"{current_user.id}.json", "rb+") as f:
+                with open(
+                    Path(__file__).parent.parent / "data" / f"{current_user.id}.json",
+                    "rb+",
+                ) as f:
                     return FileOps.file_operations_encrypted(operation, f, data)
             else:
-                with open(Path(__file__).parent.parent / "data" / f"{current_user.id}.json", "r+") as f:
+                with open(
+                    Path(__file__).parent.parent / "data" / f"{current_user.id}.json",
+                    "r+",
+                ) as f:
                     return FileOps.file_operations_plain(operation, f, data)
         except JSONDecodeError:
             raise TodoCore.incorrect_format

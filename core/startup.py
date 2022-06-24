@@ -5,6 +5,7 @@ import json
 from cryptography.fernet import Fernet
 import codecs
 
+
 class StartupChecks(object):
 
     key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode())
@@ -17,7 +18,9 @@ class StartupChecks(object):
         for filename in os.listdir("./data/"):
             if filename.endswith(".json"):
                 files.append(filename)
-        print("Encryption enabled...") if Config.ENCRYPT_JSON else print("Encryption disabled.")
+        print("Encryption enabled...") if Config.ENCRYPT_JSON else print(
+            "Encryption disabled."
+        )
         if "users.json" in files:
             print("users.json exists...")
             with open("./data/users.json", "rb") as f:
@@ -27,7 +30,7 @@ class StartupChecks(object):
                         data = json.loads(data)["encrypted"]
                         StartupChecks.fernet.decrypt(data.encode()).decode()
                     if not Config.ENCRYPT_JSON:
-                        json.load(f) 
+                        json.load(f)
                     print("users.json loaded successfully...")
                 except (json.decoder.JSONDecodeError, KeyError):
                     f.close()
@@ -76,13 +79,13 @@ class StartupChecks(object):
         else:
             print("No users found...")
         for user in data:
-            id = data[user]['id']
+            id = data[user]["id"]
             if f"{id}.json" not in files:
-                print("JSON file for user ID {} does not exist, creating new one...".format(id))
+                print(f"JSON file for user ID {id} does not exist, creating new one...")
                 with open(f"./data/{id}.json", "w") as f:
                     json.dump({}, f)
                 if Config.ENCRYPT_JSON:
-                    print(f"Encrypting JSON file...")
+                    print("Encrypting JSON file...")
                     with open(f"./data/{id}.json", "rb+") as f:
                         json_file = json.load(f)
                         encrypted = json.dumps(json_file).encode()

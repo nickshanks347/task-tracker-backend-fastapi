@@ -4,6 +4,7 @@ from pathlib import Path
 with open(Path(__file__).parent / "config.yaml", "r") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
+
 class Config:
     JWT_SECRET_KEY = config["main"]["JWT_SECRET_KEY"]
     JSON_SECRET_KEY = config["main"]["JSON_SECRET_KEY"]

@@ -8,6 +8,7 @@ import uuid
 
 router = APIRouter()
 
+
 @router.post("/register", status_code=201, response_model=User)
 def register(form_data: OAuth2PasswordRequestForm = Depends()):
     if Config.ENABLE_REGISTRATIONS:
@@ -21,7 +22,11 @@ def register(form_data: OAuth2PasswordRequestForm = Depends()):
             "disabled": False,
         }
         AuthCore.file_operations("write", user_db)
-        return User(username=form_data.username, id=user_db[form_data.username]["id"], disabled=user_db[form_data.username]["disabled"])
+        return User(
+            username=form_data.username,
+            id=user_db[form_data.username]["id"],
+            disabled=user_db[form_data.username]["disabled"],
+        )
     else:
         raise HTTPException(status_code=400, detail="Registrations are disabled")
 

@@ -4,6 +4,7 @@ from json import JSONDecodeError
 from cryptography.fernet import Fernet
 from data import Config
 
+
 class FileOps(object):
     key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode())
     fernet = Fernet(key)
