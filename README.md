@@ -1,3 +1,3 @@
-# task-tracker-backend-2
+# task-tracker-backend-fastapi
 
-Backend for SamShanks1/task-tracker using FastAPI
+This is a simple task tracker backend using FastAPI with Bearer token authentication.
