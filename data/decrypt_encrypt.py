@@ -2,9 +2,11 @@ import argparse
 import base64
 from cryptography.fernet import Fernet
 import os
-from core.config import Config
 import json
 import colorama
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from core.config import Config
 
 parser = argparse.ArgumentParser(
     description="Decrypt and encrypt data files for backend"
