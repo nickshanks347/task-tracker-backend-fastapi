@@ -5,6 +5,7 @@ from .models.auth import Token, User
 from core.auth import AuthCore
 from core.config import Config
 import uuid
+from pathlib import Path
 
 router = APIRouter()
 
@@ -22,6 +23,7 @@ def register(form_data: OAuth2PasswordRequestForm = Depends()):
             "disabled": False,
         }
         AuthCore.file_operations("write", user_db)
+        AuthCore.file_operations_register_user(user_db[form_data.username]["id"])
         return User(
             username=form_data.username,
             id=user_db[form_data.username]["id"],

@@ -36,6 +36,14 @@ class AuthCore(object):
         except FileNotFoundError:
             raise AuthCore.incorrect_format
 
+    def file_operations_register_user(id):
+        if Config.ENCRYPT_JSON:
+            with open(Path(__file__).parent.parent / "data" / f"{id}.json", "wb") as f:
+                return FileOps.file_operations_encrypted("write", f, data={})
+        else:
+            with open(Path(__file__).parent.parent / "data" / f"{id}.json", "w") as f:
+                return FileOps.file_operations_plain("write", f, data={})
+
     def verify_password(plain_password, hashed_password):
         return pwd_context.verify(plain_password, hashed_password)
 
