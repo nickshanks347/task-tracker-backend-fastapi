@@ -2,7 +2,7 @@ import argparse
 import base64
 from cryptography.fernet import Fernet
 import os
-from __init__ import Config
+from core.config import Config
 import json
 import colorama
 
@@ -25,9 +25,9 @@ try:
         exit(1)
     elif args.decrypt:
         try:
-            print(colorama.Fore.GREEN + " :: Decrypting data files")
             for filename in os.listdir():
                 if filename.endswith(".json"):
+                    print(colorama.Fore.GREEN + f" :: Decrypting {filename}")
                     with open(filename, "rb+") as f:
                         data = f.read().decode()
                         data = json.loads(data)["encrypted"]
@@ -40,9 +40,9 @@ try:
         except KeyError:
             print(colorama.Fore.RED + " :: Data is already decrypted")
     elif args.encrypt:
-        print(colorama.Fore.GREEN + " :: Encrypting data files")
         for filename in os.listdir():
             if filename.endswith(".json"):
+                print(colorama.Fore.GREEN + f" :: Encrypting {filename}")
                 with open(filename, "rb+") as f:
                     data = json.load(f)
                     if data.get("encrypted"):

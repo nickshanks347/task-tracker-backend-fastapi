@@ -1,6 +1,6 @@
 import base64
 import os
-from data import Config
+from core.config import Config
 import json
 from cryptography.fernet import Fernet
 import codecs

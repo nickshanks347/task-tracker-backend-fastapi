@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from .models.auth import Token, User
 from core.auth import AuthCore
-from data import Config
+from core.config import Config
 import uuid
 
 router = APIRouter()

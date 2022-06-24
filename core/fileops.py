@@ -2,7 +2,7 @@ import base64
 import json
 from json import JSONDecodeError
 from cryptography.fernet import Fernet
-from data import Config
+from core.config import Config
 
 
 class FileOps(object):

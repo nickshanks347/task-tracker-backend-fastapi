@@ -3,7 +3,7 @@ from json import JSONDecodeError
 from pathlib import Path
 from fastapi import HTTPException
 import datetime
-from data import Config
+from core.config import Config
 from .fileops import FileOps
 
 

@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
 from apis.models.auth import User, TokenData, UserInDB
-from data import Config
+from core.config import Config
 from .fileops import FileOps
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
