@@ -4,20 +4,25 @@ from cryptography.fernet import Fernet
 import os
 import json
 import colorama
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from core.config import Config
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+path = Path(__file__).parent.parent / "data" / "config.env"
+load_dotenv(path)
+JSON_SECRET_KEY = os.getenv("JSON_SECRET_KEY")
 
 parser = argparse.ArgumentParser(
-    description="Decrypt and encrypt data files for backend"
+    description="Decrypt and encrypt data files for the application."
 )
 parser.add_argument("-d", "--decrypt", help="Decrypt data files", action="store_true")
 parser.add_argument("-e", "--encrypt", help="Encrypt data files", action="store_true")
 args = parser.parse_args()
 
-key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode('utf-8'))
+key = base64.urlsafe_b64encode(JSON_SECRET_KEY.encode('utf-8'))
 fernet = Fernet(key)
 colorama.init()
+
 try:
     if not args.decrypt and not args.encrypt:
         print(colorama.Fore.RED + " :: Please specify either --decrypt or --encrypt")

@@ -1,14 +1,14 @@
-import yaml
+from dotenv import load_dotenv
+import os
 from pathlib import Path
 
-with open(Path(__file__).parent.parent / "data" / "config.yaml", "r") as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)
-
+path = Path(__file__).parent.parent / "data" / "config.env"
+load_dotenv(path)
 
 class Config:
-    JWT_SECRET_KEY = config["main"]["JWT_SECRET_KEY"]
-    JSON_SECRET_KEY = config["main"]["JSON_SECRET_KEY"]
-    ALGORITHM = config["main"]["ALGORITHM"]
-    ACCESS_TOKEN_EXPIRE_MINUTES = config["main"]["ACCESS_TOKEN_EXPIRE_MINUTES"]
-    ENABLE_REGISTRATIONS = config["main"]["ENABLE_REGISTRATIONS"]
-    ENCRYPT_JSON = config["main"]["ENCRYPT_JSON"]
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JSON_SECRET_KEY = os.getenv("JSON_SECRET_KEY")
+    ALGORITHM = os.getenv("ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+    ENABLE_REGISTRATIONS = os.getenv("ENABLE_REGISTRATIONS")
+    ENCRYPT_JSON = os.getenv("ENCRYPT_JSON")

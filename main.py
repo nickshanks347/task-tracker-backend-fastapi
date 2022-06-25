@@ -12,5 +12,5 @@ try:
         uvicorn.run("main:app", reload=True)
 except FileNotFoundError:
     print("Config file not found...")
-    print("Please ensure config.yaml exists in the data directory...")
+    print("Please ensure config.env exists in the data directory...")
     exit(1)

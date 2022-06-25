@@ -33,14 +33,14 @@ Copy the config file:
 
 ```bash
 cd data
-cp config_example.yaml config.yaml
+cp config_example.env config.env
 ```
 
 ## Configuration
 
-The application needs `config.yaml` in order to start correctly.
+The application needs `config.env` in order to start correctly.
 
-Included in the repository is a `config_example.yaml`, stored in the data directory. It has this format:
+Included in the repository is a `config_example.env`, stored in the data directory. It has this format:
 
 ```yaml
 main:
@@ -58,6 +58,8 @@ main:
 4. `ACCESS_TOKEN_EXPIRE_MINUTES` contains the number of minutes the access token is valid for.
 5. `ENABLE_REGISTRATIONS` contains whether or not registrations are enabled.
 6. `ENCRYPT_JSON` contains whether or not JSON files are encrypted.
+
+When the application starts, it will use `python-dotenv` to set the environment variables listed above. The application then reads the required environment variables and loads them into the application.
 
 ### Encryption/Decryption
 
@@ -79,7 +81,7 @@ Note: **`JSON_SECRET_KEY` needs a 32-bit key.**
 
 A file to encrypt/decrypt JSON files is stored in the `data` directory. It is called `decrypt_encrypt.py`.
 
-The file will read the `JSON_SECRET_KEY` from the `config.yaml` file and use it to encrypt/decrypt all JSON files in the `data` directory.
+The file will read the `JSON_SECRET_KEY` from the `config.env` file and use it to encrypt/decrypt all JSON files in the `data` directory.
 
 To encrypt all JSON files, use the following command:
 
