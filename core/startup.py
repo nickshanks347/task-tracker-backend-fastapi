@@ -8,7 +8,7 @@ import codecs
 
 class StartupChecks(object):
 
-    key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode())
+    key = base64.urlsafe_b64encode(Config.JSON_SECRET_KEY.encode('utf-8'))
     fernet = Fernet(key)
     reader = codecs.getreader("utf-8")
 
@@ -26,9 +26,9 @@ class StartupChecks(object):
             with open("./data/users.json", "rb") as f:
                 try:
                     if Config.ENCRYPT_JSON:
-                        data = f.read().decode()
+                        data = f.read().decode('utf-8')
                         data = json.loads(data)["encrypted"]
-                        StartupChecks.fernet.decrypt(data.encode()).decode()
+                        StartupChecks.fernet.decrypt(data.encode('utf-8')).decode('utf-8')
                     if not Config.ENCRYPT_JSON:
                         json.load(f)
                     print("users.json loaded successfully...")
@@ -39,15 +39,15 @@ class StartupChecks(object):
                     os.rename("./data/users.json", "./data/users.json.bak")
                     print("Creating new users.json...")
                     with open("./data/users.json", "wb") as f:
-                        f.write("{}".encode())
+                        f.write("{}".encode('utf-8'))
                     if Config.ENCRYPT_JSON:
                         print("Encrypting new users.json...")
                         json_file = json.load(f)
-                        encrypted = json.dumps(json_file).encode()
-                        encrypted = StartupChecks.fernet.encrypt(encrypted).decode()
+                        encrypted = json.dumps(json_file).encode('utf-8')
+                        encrypted = StartupChecks.fernet.encrypt(encrypted).decode('utf-8')
                         write = {"encrypted": encrypted}
                         f.seek(0)
-                        f.write(json.dumps(write, indent=4).encode())
+                        f.write(json.dumps(write, indent=4).encode('utf-8'))
                         f.truncate()
                         f.close()
 
@@ -59,18 +59,18 @@ class StartupChecks(object):
                 print("Encrypting new users.json...")
                 with open("./data/users.json", "rb+") as f:
                     data = json.load(f)
-                    encrypted = json.dumps(data).encode()
-                    encrypted = StartupChecks.fernet.encrypt(encrypted).decode()
+                    encrypted = json.dumps(data).encode('utf-8')
+                    encrypted = StartupChecks.fernet.encrypt(encrypted).decode('utf-8')
                     write = {"encrypted": encrypted}
                     f.seek(0)
-                    f.write(json.dumps(write, indent=4).encode())
+                    f.write(json.dumps(write, indent=4).encode('utf-8'))
                     f.truncate()
                     f.close()
         with open("./data/users.json", "rb") as f:
             if Config.ENCRYPT_JSON:
                 data = json.load(f)
                 encrypted = data["encrypted"]
-                encrypted = StartupChecks.fernet.decrypt(encrypted.encode()).decode()
+                encrypted = StartupChecks.fernet.decrypt(encrypted.encode('utf-8')).decode('utf-8')
                 data = json.loads(encrypted)
             else:
                 data = json.load(f)
@@ -88,11 +88,11 @@ class StartupChecks(object):
                     print("Encrypting JSON file...")
                     with open(f"./data/{id}.json", "rb+") as f:
                         json_file = json.load(f)
-                        encrypted = json.dumps(json_file).encode()
-                        encrypted = StartupChecks.fernet.encrypt(encrypted).decode()
+                        encrypted = json.dumps(json_file).encode('utf-8')
+                        encrypted = StartupChecks.fernet.encrypt(encrypted).decode('utf-8')
                         write = {"encrypted": encrypted}
                         f.seek(0)
-                        f.write(json.dumps(write, indent=4).encode())
+                        f.write(json.dumps(write, indent=4).encode('utf-8'))
                         f.truncate()
                         f.close()
             else:
