@@ -46,14 +46,16 @@ The application needs `config.env` in order to start correctly.
 
 Included in the repository is a `config_example.env`, stored in the data directory. It has this format:
 
-```yaml
-main:
-  JWT_SECRET_KEY: secret
-  JSON_SECRET_KEY: secret
-  ALGORITHM: HS256
-  ACCESS_TOKEN_EXPIRE_MINUTES: 30
-  ENABLE_REGISTRATIONS: true
-  ENCRYPT_JSON: true
+```env
+JWT_SECRET_KEY=secret
+JSON_SECRET_KEY=secret
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+ENABLE_REGISTRATIONS=1
+ENCRYPT_JSON=1
+RELOAD=1
+HOST=0.0.0.0
+PORT=8000
 ```
 
 1. `JWT_SECRET_KEY` contains the secret key for the JWT authentication scheme.
@@ -62,6 +64,9 @@ main:
 4. `ACCESS_TOKEN_EXPIRE_MINUTES` contains the number of minutes the access token is valid for.
 5. `ENABLE_REGISTRATIONS` contains whether or not registrations are enabled.
 6. `ENCRYPT_JSON` contains whether or not JSON files are encrypted.
+7. `RELOAD` contains whether or not the application should reload the Python files on-save (usually only enabled for debugging/development)
+8. `HOST` contains the hostname to bind the application to.
+9. `PORT` contains the port to bind the application to.
 
 When the application starts, it will use `python-dotenv` to set the environment variables listed above. The application then reads the required environment variables and loads them into the application.
 
