@@ -16,6 +16,9 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - 
+        name: Set tag env
+        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -33,4 +36,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/todo-fastapi:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/todo-fastapi:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/todo-fastapi:${{ env.GITHUB_SHA_SHORT }}, ${{ secrets.DOCKER_HUB_USERNAME }}/todo-fastapi:latest
