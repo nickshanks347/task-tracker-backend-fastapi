@@ -1,5 +1,7 @@
 # task-tracker-backend-fastapi
 
+[![Build & Push](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/ci.yml/badge.svg)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/ci.yml)
+
 This is a simple task tracker backend using FastAPI. It uses a simple bearer token authentication scheme but stores users/user files in JSON (with optional encryption).
 
 ## Installation
