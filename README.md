@@ -36,6 +36,8 @@ cd data
 cp config_example.env config.env
 ```
 
+---
+
 ## Configuration
 
 The application needs `config.env` in order to start correctly.
@@ -60,6 +62,8 @@ main:
 6. `ENCRYPT_JSON` contains whether or not JSON files are encrypted.
 
 When the application starts, it will use `python-dotenv` to set the environment variables listed above. The application then reads the required environment variables and loads them into the application.
+
+---
 
 ### Encryption/Decryption
 
@@ -95,10 +99,34 @@ To decrypt all JSON files, use the following command:
 python3 decrypt_encrypt.py --decrypt
 ```
 
+---
+
 ## Running the application
 
 To run the application, simply enter `task-tracker-backend-fastapi` and run the following command:
 
 ```bash
 python3 main.py
+```
+
+---
+
+## Docker
+
+The application is available on DockerHub at <https://hub.docker.com/r/nickshanks347/todo-fastapi>. You can pull the latest application with `docker pull nickshanks347/todo-fastapi:latest`. Each tag corresponds to a short Git commit hash.
+
+Using the environment variables above, you can run the Docker image with the following command:
+
+```bash
+docker run -p 8000:8000 --name todo-fastapi -e JWT_SECRET_KEY=secret -e JSON_SECRET_KEY=secret -e ALGORITHM=HS256 -e ACCESS_TOKEN_EXPIRE_MINUTES=30 -e ENABLE_REGISTRATIONS=true -e ENCRYPT_JSON=true -v ./data:/code/data nickshanks347/todo-fastapi:latest
+```
+
+**Again, be sure to use a secure value for `JWT_SECRET_KEY` and `JSON_SECRET_KEY`.**
+
+### Building Docker image
+
+If you want to build the image locally, use the included Dockerfile:
+
+```bash
+docker build -t todo-fastapi .
 ```
