@@ -18,17 +18,16 @@ git clone https://github.com/nickshanks347/task-tracker-backend-fastapi
 cd task-tracker-backend-fastapi
 ```
 
-*Optionally, create and enter a virtual environment:*
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
 Install dependencies:
 
 ```bash
-pip3 install -r requirements.txt
+poetry install --no-dev
+```
+
+*Optionally install development dependencies too:*
+
+```bash
+poetry install
 ```
 
 Copy the config file:

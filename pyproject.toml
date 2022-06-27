@@ -1,3 +1,31 @@
+[tool.poetry]
+name = "task-tracker-backend-fastapi"
+version = "0.1.0"
+description = "Simple task tracker using FastAPI with Bearer authentication"
+authors = ["Nick <nick@tfsi.dev>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+colorama = "^0.4.5"
+fastapi = "^0.78.0"
+python-dotenv = "^0.20.0"
+cryptography = "^37.0.3"
+passlib = "^1.7.4"
+python-multipart = "^0.0.5"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+uvicorn = {extras = ["standard"], version = "^0.18.2"}
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.19.0"
+pytest = "^7.1.2"
+black = "^22.3.0"
+flake8 = "^4.0.1"
+requests = "^2.28.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.black]
 line-length = 89
 include = '\.pyi?$'
@@ -8,6 +36,7 @@ exclude = '''
   | \.mypy_cache
   | \.tox
   | \.venv
+  | \venv
   | _build
   | buck-out
   | build
