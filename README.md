@@ -1,6 +1,7 @@
 # task-tracker-backend-fastapi
 
 [![Build & Push](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml/badge.svg)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnickshanks347%2Ftask-tracker-backend-fastapi.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnickshanks347%2Ftask-tracker-backend-fastapi?ref=badge_shield)
 
 This is a simple task tracker backend using FastAPI. It uses a simple bearer token authentication scheme but stores users/user files in JSON (with optional encryption).
 
@@ -136,3 +137,7 @@ If you want to build the image locally, use the included Dockerfile:
 ```bash
 docker build -t todo-fastapi .
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnickshanks347%2Ftask-tracker-backend-fastapi.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnickshanks347%2Ftask-tracker-backend-fastapi?ref=badge_large)
