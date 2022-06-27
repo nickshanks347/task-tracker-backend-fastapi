@@ -62,7 +62,7 @@ uvloop = ["uvloop (>=0.15.2)"]
 name = "certifi"
 version = "2022.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -650,7 +650,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "1f601c18249d0d28d64a5d8e42c63a06b6c26c7608d198a67d9c0d5751003bd3"
+content-hash = "6425cbbdf3b66fce7aeaf8f0b57ea3f761680ef55e38f2074bef1fe96deab9c5"
 
 [metadata.files]
 anyio = [

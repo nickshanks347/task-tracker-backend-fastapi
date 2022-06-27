@@ -2,9 +2,13 @@ FROM python:3.10
 
 WORKDIR /code
 
-COPY ./requirements.txt /code/requirements.txt
+COPY poetry.lock pyproject.toml /code/
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip install poetry
+
+RUN poetry config virtualenvs.create false
+
+RUN poetry install --no-interaction --no-dev
 
 COPY ./ /code
 
