@@ -16,6 +16,15 @@ def test_register_user():
         id = response.json()['id']
         assert response.json() == {'username': 'pytest', "id": id, "disabled": False}
 
+def test_register_user_already_exists():
+    with TestClient(app) as client:
+        response = client.post('/api/auth/register', data={
+            'username': 'pytest',
+            'password': 'pytest'
+        })
+        assert response.status_code == 400
+        assert response.json() == {'detail': 'Username already registered'}
+
 def test_login_user():
     with TestClient(app) as client:
         response = client.post('/api/auth/token', data={
