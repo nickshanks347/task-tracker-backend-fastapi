@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
+import uuid
 from datetime import timedelta
-from .models.auth import Token, User
+
 from core.auth import AuthCore
 from core.config import Config
-import uuid
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
+
+from .models.auth import Token, User
 
 router = APIRouter()
 

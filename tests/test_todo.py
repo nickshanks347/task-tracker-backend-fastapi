@@ -1,9 +1,10 @@
-from main import app
 import os
 import sys
+
 from fastapi.testclient import TestClient
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from main import app
 
 with TestClient(app) as client:
 
@@ -93,14 +94,6 @@ with TestClient(app) as client:
         )
         assert response.status_code == 200
         assert response.json() == {"message": "Task deleted"}
-
-    def test_read_todo_not_found():
-        access_token = login()
-        response = client.post(
-            "/api/todo/test", headers={"Authorization": f"Bearer {access_token}"}
-        )
-        assert response.status_code == 404
-        assert response.json() == {"detail": "Task not found"}
 
     def test_update_todo_not_found():
         access_token = login()

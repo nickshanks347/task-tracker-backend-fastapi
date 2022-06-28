@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
-from json import JSONDecodeError
 from pathlib import Path
-from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
-from jose import jwt, JWTError
-from fastapi import Depends, HTTPException
+
 from apis.models.auth import TokenData, UserInDB
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+
 from core.config import Config
+
 from .fileops import FileOps
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
@@ -15,19 +17,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AuthCore(object):
-
     def file_operations(operation, data=None):
         if Config.ENCRYPT_JSON:
-            with open(
-                Path(__file__).parent.parent / "data" / "users.json", "rb+"
-            ) as f:
+            with open(Path(__file__).parent.parent / "data" / "users.json", "rb+") as f:
                 return FileOps.file_operations_encrypted(operation, f, data)
         else:
-            with open(
-                Path(__file__).parent.parent / "data" / "users.json", "r+"
-            ) as f:
+            with open(Path(__file__).parent.parent / "data" / "users.json", "r+") as f:
                 return FileOps.file_operations_plain(operation, f, data)
-
 
     def file_operations_register_user(id):
         if Config.ENCRYPT_JSON:

@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends
-from core.todo import TodoCore
 from core.auth import AuthCore
-from .models.todo import TaskRequest, TaskResponse, UpdateTaskRequest
+from core.todo import TodoCore
+from fastapi import APIRouter, Depends
+
 from .models.auth import User
+from .models.todo import TaskRequest, TaskResponse, UpdateTaskRequest
 
 router = APIRouter()
 

@@ -1,9 +1,11 @@
 import base64
-import os
-from core.config import Config
-import json
-from cryptography.fernet import Fernet
 import codecs
+import json
+import os
+
+from cryptography.fernet import Fernet
+
+from core.config import Config
 
 
 class StartupChecks(object):

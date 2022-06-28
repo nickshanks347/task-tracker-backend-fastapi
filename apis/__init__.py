@@ -1,7 +1,8 @@
-from fastapi import APIRouter
-from .todo import router as todo_router
-from .auth import router as auth_router
 from core.startup import StartupChecks
+from fastapi import APIRouter
+
+from .auth import router as auth_router
+from .todo import router as todo_router
 
 router = APIRouter()
 
