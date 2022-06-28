@@ -1,6 +1,6 @@
 # task-tracker-backend-fastapi
 
-[![Build & Push](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml/badge.svg)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml) [![CodeQL](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/codeql-analysis.yml) [![codecov](https://codecov.io/gh/nickshanks347/task-tracker-backend-fastapi/branch/main/graph/badge.svg?token=A78MC548HJ)](https://codecov.io/gh/nickshanks347/task-tracker-backend-fastapi)
+[![Build & Push](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml/badge.svg)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml) [![CodeQL](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/codeql-analysis.yml) [![codecov](https://codecov.io/gh/nickshanks347/task-tracker-backend-fastapi/branch/main/graph/badge.svg?token=toWh5loMI9)](https://codecov.io/gh/nickshanks347/task-tracker-backend-fastapi)
 
 This is a simple task tracker backend using FastAPI. It uses a simple bearer token authentication scheme but stores users/user files in JSON (with optional encryption).
 
