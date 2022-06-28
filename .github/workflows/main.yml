@@ -32,6 +32,10 @@ jobs:
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
 
       - name: Create env file
         uses: SpicyPizza/create-envfile@v1.3
@@ -47,12 +51,25 @@ jobs:
           envkey_RELOAD: ${{ secrets.RELOAD }}
           envkey_HOST: ${{ secrets.HOST }}
           envkey_PORT: ${{ secrets.PORT }} 
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with: 
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       
-      - name: Install dependencies
+      - name: Install dependencies if cache doesn't exist
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction
 
-      - name: Run tests
-        run: poetry run pytest
+      - name: Run tests and generate coverage report
+        run: poetry run pytest --cov ./ --cov-report xml
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   docker:
     needs: test
