@@ -15,26 +15,19 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AuthCore(object):
-    incorrect_format = HTTPException(
-        status_code=404, detail="Tasks JSON file has wrong format or does not exist"
-    )
 
     def file_operations(operation, data=None):
-        try:
-            if Config.ENCRYPT_JSON:
-                with open(
-                    Path(__file__).parent.parent / "data" / "users.json", "rb+"
-                ) as f:
-                    return FileOps.file_operations_encrypted(operation, f, data)
-            else:
-                with open(
-                    Path(__file__).parent.parent / "data" / "users.json", "r+"
-                ) as f:
-                    return FileOps.file_operations_plain(operation, f, data)
-        except JSONDecodeError:
-            raise AuthCore.incorrect_format
-        except FileNotFoundError:
-            raise AuthCore.incorrect_format
+        if Config.ENCRYPT_JSON:
+            with open(
+                Path(__file__).parent.parent / "data" / "users.json", "rb+"
+            ) as f:
+                return FileOps.file_operations_encrypted(operation, f, data)
+        else:
+            with open(
+                Path(__file__).parent.parent / "data" / "users.json", "r+"
+            ) as f:
+                return FileOps.file_operations_plain(operation, f, data)
+
 
     def file_operations_register_user(id):
         if Config.ENCRYPT_JSON:

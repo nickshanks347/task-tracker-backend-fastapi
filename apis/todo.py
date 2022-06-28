@@ -28,7 +28,7 @@ def create_todo(
     return TodoCore.create_todo(task, current_user)
 
 
-@router.post(
+@router.get(
     "/{id}",
     status_code=200,
     responses={

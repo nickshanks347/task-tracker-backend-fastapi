@@ -56,7 +56,7 @@ with TestClient(app) as client:
 
     def test_read_todo():
         access_token = login()
-        response = client.post(
+        response = client.get(
             f"/api/todo/{id}", headers={"Authorization": f"Bearer {access_token}"}
         )
         assert response.status_code == 200
@@ -97,6 +97,32 @@ with TestClient(app) as client:
     def test_read_todo_not_found():
         access_token = login()
         response = client.post(
+            "/api/todo/test", headers={"Authorization": f"Bearer {access_token}"}
+        )
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Task not found"}
+
+    def test_update_todo_not_found():
+        access_token = login()
+        response = client.put(
+            "/api/todo/test",
+            json={"title": "test2", "done": True, "colour": "blue"},
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Task not found"}
+
+    def test_delete_todo_not_found():
+        access_token = login()
+        response = client.delete(
+            "/api/todo/test", headers={"Authorization": f"Bearer {access_token}"}
+        )
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Task not found"}
+
+    def test_read_todo_not_found():
+        access_token = login()
+        response = client.get(
             "/api/todo/test", headers={"Authorization": f"Bearer {access_token}"}
         )
         assert response.status_code == 404

@@ -9,28 +9,20 @@ from .fileops import FileOps
 
 class TodoCore(object):
     task_not_found = HTTPException(status_code=404, detail="Task not found")
-    incorrect_format = HTTPException(
-        status_code=404, detail="Tasks JSON file has wrong format or does not exist"
-    )
 
     def file_operations(current_user, operation, data=None):
-        try:
-            if Config.ENCRYPT_JSON:
-                with open(
-                    Path(__file__).parent.parent / "data" / f"{current_user.id}.json",
-                    "rb+",
-                ) as f:
-                    return FileOps.file_operations_encrypted(operation, f, data)
-            else:
-                with open(
-                    Path(__file__).parent.parent / "data" / f"{current_user.id}.json",
-                    "r+",
-                ) as f:
-                    return FileOps.file_operations_plain(operation, f, data)
-        except JSONDecodeError:
-            raise TodoCore.incorrect_format
-        except FileNotFoundError:
-            raise TodoCore.incorrect_format
+        if Config.ENCRYPT_JSON:
+            with open(
+                Path(__file__).parent.parent / "data" / f"{current_user.id}.json",
+                "rb+",
+            ) as f:
+                return FileOps.file_operations_encrypted(operation, f, data)
+        else:
+            with open(
+                Path(__file__).parent.parent / "data" / f"{current_user.id}.json",
+                "r+",
+            ) as f:
+                return FileOps.file_operations_plain(operation, f, data)
 
     def get_all_todos(current_user):
         todos = TodoCore.file_operations(current_user, "read")
