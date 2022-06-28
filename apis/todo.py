@@ -12,7 +12,7 @@ router = APIRouter()
     status_code=200,
     responses={200: {"description": "Success", "model": TaskResponse}},
 )
-def get_all_todos(current_user: User = Depends(AuthCore.get_current_active_user)):
+def get_all_todos(current_user: User = Depends(AuthCore.get_current_user)):
     return TodoCore.get_all_todos(current_user)
 
 
@@ -23,7 +23,7 @@ def get_all_todos(current_user: User = Depends(AuthCore.get_current_active_user)
     responses={201: {"description": "Created", "model": TaskResponse}},
 )
 def create_todo(
-    task: TaskRequest, current_user: User = Depends(AuthCore.get_current_active_user)
+    task: TaskRequest, current_user: User = Depends(AuthCore.get_current_user)
 ):
     return TodoCore.create_todo(task, current_user)
 
@@ -36,7 +36,7 @@ def create_todo(
         200: {"description": "Successful", "model": TaskResponse},
     },
 )
-def get_todo(id: str, current_user: User = Depends(AuthCore.get_current_active_user)):
+def get_todo(id: str, current_user: User = Depends(AuthCore.get_current_user)):
     return TodoCore.get_todo(id, current_user)
 
 
@@ -52,7 +52,7 @@ def get_todo(id: str, current_user: User = Depends(AuthCore.get_current_active_u
 def update_todo(
     id: str,
     task: UpdateTaskRequest,
-    current_user: User = Depends(AuthCore.get_current_active_user),
+    current_user: User = Depends(AuthCore.get_current_user),
 ):
     return TodoCore.update_todo(id, task, current_user)
 
@@ -68,5 +68,5 @@ def update_todo(
         },
     },
 )
-def delete_todo(id: str, current_user: User = Depends(AuthCore.get_current_active_user)):
+def delete_todo(id: str, current_user: User = Depends(AuthCore.get_current_user)):
     return TodoCore.delete_todo(id, current_user)

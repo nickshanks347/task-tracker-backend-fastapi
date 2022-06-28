@@ -1,9 +1,9 @@
+from fastapi.testclient import TestClient
 import os
 import sys
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from main import app
-from fastapi.testclient import TestClient
+
 
 with TestClient(app) as client:
 
@@ -14,6 +14,17 @@ with TestClient(app) as client:
         assert response.status_code == 201
         id = response.json()["id"]
         assert response.json() == {"username": "pytest", "id": id, "disabled": False}
+
+    def test_registrations_disabled():
+        from main import Config
+
+        Config.ENABLE_REGISTRATIONS = False
+        response = client.post(
+            "/api/auth/register", data={"username": "pytes1t", "password": "pytest1"}
+        )
+        assert response.status_code == 400
+        assert response.json() == {"detail": "Registrations are disabled"}
+        Config.ENABLE_REGISTRATIONS = True
 
     def test_register_user_already_exists():
         response = client.post(
@@ -43,6 +54,18 @@ with TestClient(app) as client:
         )
         assert response.status_code == 401
         assert response.json() == {"detail": "Incorrect username or password"}
+
+    def test_login_user_disabled():
+        response = client.post(
+            "/api/auth/register",
+            data={"username": "disabled", "password": "disabled"},
+            params={"disabled": "true"},
+        )
+        response = client.post(
+            "/api/auth/token", data={"username": "disabled", "password": "disabled"}
+        )
+        assert response.status_code == 401
+        assert response.json() == {"detail": "User is disabled"}
 
     def test_current_user():
         response = client.post(

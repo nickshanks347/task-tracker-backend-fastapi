@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post("/register", status_code=201, response_model=User)
-def register(form_data: OAuth2PasswordRequestForm = Depends()):
+def register(form_data: OAuth2PasswordRequestForm = Depends(), disabled: bool = False):
     if Config.ENABLE_REGISTRATIONS:
         user_db = AuthCore.file_operations("read")
         if form_data.username in user_db:
@@ -19,7 +19,7 @@ def register(form_data: OAuth2PasswordRequestForm = Depends()):
             "username": form_data.username,
             "hashed_password": AuthCore.hash_password(form_data.password),
             "id": str(uuid.uuid4()),
-            "disabled": False,
+            "disabled": disabled,
         }
         AuthCore.file_operations("write", user_db)
         AuthCore.file_operations_register_user(user_db[form_data.username]["id"])
@@ -43,6 +43,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    if user.disabled:
+        raise HTTPException(status_code=401, detail="User is disabled")
     access_token_expires = timedelta(minutes=Config.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
@@ -51,10 +53,10 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @router.get("/users/me", response_model=User)
-def get_current_user(current_user: User = Depends(AuthCore.get_current_active_user)):
+def get_current_user(current_user: User = Depends(AuthCore.get_current_user)):
     return current_user
 
 
 @router.get("/users/me/id")
-def get_current_user_id(current_user: User = Depends(AuthCore.get_current_active_user)):
+def get_current_user_id(current_user: User = Depends(AuthCore.get_current_user)):
     return {"id": current_user.id}

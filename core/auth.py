@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
-from apis.models.auth import User, TokenData, UserInDB
+from apis.models.auth import TokenData, UserInDB
 from core.config import Config
 from .fileops import FileOps
 
@@ -98,8 +98,3 @@ class AuthCore(object):
         if user is None:
             raise credentials_exception
         return user
-
-    def get_current_active_user(current_user: User = Depends(get_current_user)):
-        if current_user.disabled:
-            raise HTTPException(status_code=400, detail="Inactive user")
-        return current_user
