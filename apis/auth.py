@@ -5,7 +5,6 @@ from .models.auth import Token, User
 from core.auth import AuthCore
 from core.config import Config
 import uuid
-from pathlib import Path
 
 router = APIRouter()
 

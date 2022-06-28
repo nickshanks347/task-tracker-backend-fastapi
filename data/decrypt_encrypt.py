@@ -5,7 +5,6 @@ import os
 import json
 import colorama
 from dotenv import load_dotenv
-import os
 from pathlib import Path
 
 path = Path(__file__).parent.parent / "data" / "config.env"
@@ -19,7 +18,7 @@ parser.add_argument("-d", "--decrypt", help="Decrypt data files", action="store_
 parser.add_argument("-e", "--encrypt", help="Encrypt data files", action="store_true")
 args = parser.parse_args()
 
-key = base64.urlsafe_b64encode(JSON_SECRET_KEY.encode('utf-8'))
+key = base64.urlsafe_b64encode(JSON_SECRET_KEY.encode("utf-8"))
 fernet = Fernet(key)
 colorama.init()
 
@@ -36,11 +35,13 @@ try:
                 if filename.endswith(".json"):
                     print(colorama.Fore.GREEN + f" :: Decrypting {filename}")
                     with open(filename, "rb+") as f:
-                        data = f.read().decode('utf-8')
+                        data = f.read().decode("utf-8")
                         data = json.loads(data)["encrypted"]
-                        decrypted = fernet.decrypt(data.encode('utf-8')).decode('utf-8')
+                        decrypted = fernet.decrypt(data.encode("utf-8")).decode("utf-8")
                         f.seek(0)
-                        f.write(json.dumps(json.loads(decrypted), indent=4).encode('utf-8'))
+                        f.write(
+                            json.dumps(json.loads(decrypted), indent=4).encode("utf-8")
+                        )
                         f.truncate()
                         f.close()
             exit(0)
@@ -55,11 +56,11 @@ try:
                     if data.get("encrypted"):
                         print(colorama.Fore.RED + " :: Data is already encrypted")
                         exit(0)
-                    encrypted = json.dumps(data).encode('utf-8')
-                    encrypted = fernet.encrypt(encrypted).decode('utf-8')
+                    encrypted = json.dumps(data).encode("utf-8")
+                    encrypted = fernet.encrypt(encrypted).decode("utf-8")
                     write = {"encrypted": encrypted}
                     f.seek(0)
-                    f.write(json.dumps(write, indent=4).encode('utf-8'))
+                    f.write(json.dumps(write, indent=4).encode("utf-8"))
                     f.truncate()
                     f.close()
         exit(0)

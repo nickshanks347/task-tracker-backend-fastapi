@@ -7,7 +7,9 @@ try:
     HOST = Config.HOST
     PORT = Config.PORT
 
-    app = FastAPI(title="Todo API", description="Todo API using FastAPI", version="0.2.0")
+    app = FastAPI(
+        title="Todo API", description="Todo API using FastAPI", version="0.2.0"
+    )
 
     app.include_router(router, prefix="/api")
 

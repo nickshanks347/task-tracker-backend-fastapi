@@ -5,6 +5,7 @@ from pathlib import Path
 path = Path(__file__).parent.parent / "data" / "config.env"
 load_dotenv(path)
 
+
 class Config:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
     JSON_SECRET_KEY = os.getenv("JSON_SECRET_KEY")
