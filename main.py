@@ -1,24 +1,16 @@
-try:
-    from fastapi import FastAPI
-    from apis import router as router
-    from core.config import Config
+from fastapi import FastAPI
+from apis import router as router
+from core.config import Config
 
-    RELOAD = Config.RELOAD
-    HOST = Config.HOST
-    PORT = Config.PORT
+RELOAD = Config.RELOAD
+HOST = Config.HOST
+PORT = Config.PORT
 
-    app = FastAPI(
-        title="Todo API", description="Todo API using FastAPI", version="0.2.0"
-    )
-    
-    app.include_router(router, prefix="/api")
+app = FastAPI(title="Todo API", description="Todo API using FastAPI", version="0.2.0")
 
-    if __name__ == "__main__":
-        import uvicorn
+app.include_router(router, prefix="/api")
 
-        uvicorn.run("main:app", reload=RELOAD, host=HOST, port=PORT)
+if __name__ == "__main__":
+    import uvicorn
 
-except FileNotFoundError:
-    print("Config file not found...")
-    print("Please ensure config.env exists in the data directory...")
-    exit(1)
+    uvicorn.run("main:app", reload=RELOAD, host=HOST, port=PORT)
