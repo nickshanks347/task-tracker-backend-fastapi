@@ -161,6 +161,8 @@ generate_postman.py
 !/data/config_example.env
 /tests/data_plain/**
 /tests/data_encrypted/**
+!/tests/data_encrypted/.keep
+!/tests/data_plain/.keep
 
 # PyCharm
 #  JetBrains specific template is maintainted in a separate JetBrains.gitignore that can
