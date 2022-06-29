@@ -5,7 +5,7 @@ description = "Simple task tracker using FastAPI with Bearer authentication"
 authors = ["Nick <nick@tfsi.dev>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 colorama = "^0.4.5"
 fastapi = "^0.78.0"
 python-dotenv = "^0.20.0"
@@ -15,6 +15,7 @@ python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
 certifi = "^2022.6.15"
+pip = "^22.1.2"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.19.0"

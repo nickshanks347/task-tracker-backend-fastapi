@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Union
 
 
 class TaskRequest(BaseModel):
@@ -10,10 +11,10 @@ class TaskRequest(BaseModel):
 class TaskResponse(TaskRequest):
     id: str
     created_at: str
-    updated_at: str | None = None
+    updated_at: Union[str, None]
 
 
 class UpdateTaskRequest(BaseModel):
-    title: str | None = None
-    done: bool | None = None
-    colour: str | None = None
+    title: Union[str, None]
+    done: Union[bool, None]
+    colour: Union[str, None]

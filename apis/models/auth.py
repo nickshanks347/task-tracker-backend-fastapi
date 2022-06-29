@@ -1,14 +1,15 @@
 from pydantic import BaseModel
+from typing import Union
 
 
 class User(BaseModel):
     username: str
     id: str
-    disabled: bool | None = None
+    disabled: Union[bool, None]
 
 
 class UserInDB(User):
-    hashed_password: str | None = None
+    hashed_password: Union[str, None]
 
 
 class Token(BaseModel):
@@ -17,4 +18,4 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str | None = None
+    username: Union[str, None]

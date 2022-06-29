@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Union
 
 from apis.models.auth import TokenData, UserInDB
 from fastapi import Depends, HTTPException
@@ -51,7 +52,7 @@ class AuthCore(object):
             return False
         return user
 
-    def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    def create_access_token(data: dict, expires_delta: Union[timedelta, None]):
         to_encode = data.copy()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
