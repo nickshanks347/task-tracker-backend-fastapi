@@ -51,7 +51,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "Bearer"}
 
 
 @router.get("/users/me", response_model=User)

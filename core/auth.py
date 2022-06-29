@@ -4,7 +4,7 @@ from pathlib import Path
 from apis.models.auth import TokenData, UserInDB
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 
 from core.config import Config
@@ -75,6 +75,11 @@ class AuthCore(object):
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
+        token_expired = HTTPException(
+            status_code=401,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
         try:
             payload = jwt.decode(
                 token, Config.JWT_SECRET_KEY, algorithms=[Config.ALGORITHM]
@@ -83,6 +88,8 @@ class AuthCore(object):
             if username is None:
                 raise credentials_exception
             token_data = TokenData(username=username)
+        except ExpiredSignatureError:
+            raise token_expired
         except JWTError:
             raise credentials_exception
         user = AuthCore.get_user(
