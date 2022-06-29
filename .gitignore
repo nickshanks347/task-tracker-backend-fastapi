@@ -159,6 +159,8 @@ generate_postman.py
 !/data/__init__.py
 !/data/decrypt_encrypt.py
 !/data/config_example.env
+/tests/data_plain/**
+/tests/data_encrypted/**
 
 # PyCharm
 #  JetBrains specific template is maintainted in a separate JetBrains.gitignore that can

@@ -10,7 +10,8 @@ app = FastAPI(title="Todo API", description="Todo API using FastAPI", version="0
 
 app.include_router(router, prefix="/api")
 
-if __name__ == "__main__":
+
+if __name__ == "__main__":  # pragma: no cover
     import uvicorn
 
     uvicorn.run("main:app", reload=RELOAD, host=HOST, port=PORT)
