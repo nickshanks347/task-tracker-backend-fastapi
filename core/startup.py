@@ -2,6 +2,7 @@ import base64
 import codecs
 import json
 import os
+from pathlib import Path
 
 from cryptography.fernet import Fernet
 
@@ -15,9 +16,10 @@ class StartupChecks(object):
     reader = codecs.getreader("utf-8")
 
     def startup_checks():
+        DATA_DIR = Config.DATA_DIR
         print("Performing startup checks...")
         files = []
-        for filename in os.listdir("./data/"):
+        for filename in os.listdir(Path(__file__).parent.parent / DATA_DIR):
             if filename.endswith(".json"):
                 files.append(filename)
         print("Encryption enabled...") if Config.ENCRYPT_JSON else print(
@@ -25,7 +27,7 @@ class StartupChecks(object):
         )
         if "users.json" in files:
             print("users.json exists...")
-            with open("./data/users.json", "rb") as f:
+            with open(f"{DATA_DIR}/users.json", "rb") as f:
                 try:
                     if Config.ENCRYPT_JSON:
                         data = f.read().decode("utf-8")
@@ -40,9 +42,9 @@ class StartupChecks(object):
                     f.close()
                     print("users.json is not valid JSON...")
                     print("Moving users.json to users.json.bak...")
-                    os.rename("./data/users.json", "./data/users.json.bak")
+                    os.rename(f"{DATA_DIR}/users.json", f"{DATA_DIR}/users.json.bak")
                     print("Creating new users.json...")
-                    with open("./data/users.json", "wb") as f:
+                    with open(f"{DATA_DIR}/users.json", "wb") as f:
                         f.write("{}".encode("utf-8"))
                     if Config.ENCRYPT_JSON:
                         print("Encrypting new users.json...")
@@ -59,11 +61,13 @@ class StartupChecks(object):
 
         elif "users.json" not in files:
             print("users.json does not exist, creating new one...")
-            with open("./data/users.json", "w") as f:
+            with open(f"{Path(__file__).parent.parent / DATA_DIR}/users.json", "w") as f:
                 json.dump({}, f)
             if Config.ENCRYPT_JSON:
                 print("Encrypting new users.json...")
-                with open("./data/users.json", "rb+") as f:
+                with open(
+                    f"{Path(__file__).parent.parent / DATA_DIR}/users.json", "rb+"
+                ) as f:
                     data = json.load(f)
                     encrypted = json.dumps(data).encode("utf-8")
                     encrypted = StartupChecks.fernet.encrypt(encrypted).decode("utf-8")
@@ -72,7 +76,7 @@ class StartupChecks(object):
                     f.write(json.dumps(write, indent=4).encode("utf-8"))
                     f.truncate()
                     f.close()
-        with open("./data/users.json", "rb") as f:
+        with open(f"{Path(__file__).parent.parent / DATA_DIR}/users.json", "rb") as f:
             if Config.ENCRYPT_JSON:
                 data = json.load(f)
                 encrypted = data["encrypted"]
@@ -90,11 +94,15 @@ class StartupChecks(object):
             id = data[user]["id"]
             if f"{id}.json" not in files:
                 print(f"JSON file for user ID {id} does not exist, creating new one...")
-                with open(f"./data/{id}.json", "w") as f:
+                with open(
+                    f"{Path(__file__).parent.parent / DATA_DIR}/{id}.json", "w"
+                ) as f:
                     json.dump({}, f)
                 if Config.ENCRYPT_JSON:
                     print("Encrypting JSON file...")
-                    with open(f"./data/{id}.json", "rb+") as f:
+                    with open(
+                        f"{Path(__file__).parent.parent / DATA_DIR}/{id}.json", "rb+"
+                    ) as f:
                         json_file = json.load(f)
                         encrypted = json.dumps(json_file).encode("utf-8")
                         encrypted = StartupChecks.fernet.encrypt(encrypted).decode(

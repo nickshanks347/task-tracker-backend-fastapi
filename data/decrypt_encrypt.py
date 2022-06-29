@@ -10,7 +10,7 @@ from pathlib import Path
 path = Path(__file__).parent.parent / "data" / "config.env"
 load_dotenv(path)
 JSON_SECRET_KEY = os.getenv("JSON_SECRET_KEY")
-
+DATA_DIR = os.getenv("DATA_DIR")
 parser = argparse.ArgumentParser(
     description="Decrypt and encrypt data files for the application."
 )
@@ -31,10 +31,12 @@ try:
         exit(1)
     elif args.decrypt:
         try:
-            for filename in os.listdir():
+            for filename in os.listdir(Path(__file__).parent.parent / DATA_DIR):
                 if filename.endswith(".json"):
                     print(colorama.Fore.GREEN + f" :: Decrypting {filename}")
-                    with open(filename, "rb+") as f:
+                    with open(
+                        Path(__file__).parent.parent / DATA_DIR / filename, "rb+"
+                    ) as f:
                         data = f.read().decode("utf-8")
                         data = json.loads(data)["encrypted"]
                         decrypted = fernet.decrypt(data.encode("utf-8")).decode("utf-8")
@@ -48,10 +50,12 @@ try:
         except KeyError:
             print(colorama.Fore.RED + " :: Data is already decrypted")
     elif args.encrypt:
-        for filename in os.listdir():
+        for filename in os.listdir(Path(__file__).parent.parent / DATA_DIR):
             if filename.endswith(".json"):
                 print(colorama.Fore.GREEN + f" :: Encrypting {filename}")
-                with open(filename, "rb+") as f:
+                with open(
+                    Path(__file__).parent.parent / DATA_DIR / filename, "rb+"
+                ) as f:
                     data = json.load(f)
                     if data.get("encrypted"):
                         print(colorama.Fore.RED + " :: Data is already encrypted")

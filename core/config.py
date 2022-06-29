@@ -18,6 +18,7 @@ try:
         RELOAD = os.getenv("RELOAD") == "1"
         HOST = os.getenv("HOST")
         PORT = int(os.getenv("PORT"))
+        DATA_DIR = os.getenv("DATA_DIR")
 
 except (FileNotFoundError, TypeError, ImportError) as err:
     print(f"{err}\n")
