@@ -51,6 +51,7 @@ jobs:
           envkey_RELOAD: ${{ secrets.RELOAD }}
           envkey_HOST: ${{ secrets.HOST }}
           envkey_PORT: ${{ secrets.PORT }} 
+          envkey_DATA_DIR: ${{ secrets.DATA_DIR }}
 
       - name: Load cached venv
         id: cached-poetry-dependencies
