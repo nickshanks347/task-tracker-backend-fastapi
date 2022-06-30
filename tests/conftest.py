@@ -15,6 +15,7 @@ def set_env_vars_encrypted():
     Config.ENCRYPT_JSON = 0
     Config.DATA_DIR = ""
 
+
 @pytest.fixture(scope="session")
 def set_env_vars_plain():
     Config.ENCRYPT_JSON = 0
