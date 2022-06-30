@@ -20,7 +20,7 @@ try:
         PORT = int(os.getenv("PORT"))
         DATA_DIR = os.getenv("DATA_DIR")
 
-except (FileNotFoundError, TypeError, ImportError) as err:
+except ImportError as err:
     print(f"{err}\n")
     print("Config file not found...")
     print("Please ensure config.env exists in the data directory...")

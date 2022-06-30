@@ -38,7 +38,7 @@ class StartupChecks(object):
                     if not Config.ENCRYPT_JSON:
                         json.load(f)
                     print("users.json loaded successfully...")
-                except (json.decoder.JSONDecodeError, KeyError):
+                except (json.decoder.JSONDecodeError):
                     f.close()
                     print("users.json is not valid JSON...")
                     print("Moving users.json to users.json.bak...")
