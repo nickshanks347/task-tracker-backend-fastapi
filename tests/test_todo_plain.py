@@ -89,6 +89,24 @@ with TestClient(app) as client:
                 "updated_at": response.json()[id]["updated_at"],
             }
         }
+    
+    def test_read_all_todos_with_cookie(set_env_vars_encrypted):
+        access_token = login()
+        cookies = {"Authorization": f"Bearer {access_token}"}
+        response = client.get(
+            "/api/todo/", cookies=cookies
+        )
+        assert response.status_code == 200
+        assert response.json() == {
+            id: {
+                "id": id,
+                "title": "test2",
+                "done": True,
+                "colour": "blue",
+                "created_at": response.json()[id]["created_at"],
+                "updated_at": response.json()[id]["updated_at"],
+            }
+        }
 
     def test_delete_todo(set_env_vars_plain):
         access_token = login()
