@@ -1,9 +1,14 @@
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from apis.models.auth import TokenData, UserInDB
+from apis.models.auth import (
+    TokenData,
+    UserInDB,
+    OAuth2PasswordBearerCookie as OAuth2PasswordBearer,
+)
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+
+# from fastapi.security import OAuth2PasswordBearerCookie as OAuth2PasswordBearer
 from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 
@@ -78,7 +83,7 @@ class AuthCore(object):
         token_expired = HTTPException(
             status_code=401,
             detail="Token has expired",
-            headers={"WWW-Authenticate": "Bearer"}
+            headers={"WWW-Authenticate": "Bearer"},
         )
         try:
             payload = jwt.decode(

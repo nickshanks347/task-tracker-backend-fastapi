@@ -3,8 +3,9 @@ from datetime import timedelta
 
 from core.auth import AuthCore
 from core.config import Config
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Cookie, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
 
 from .models.auth import Token, User
 
@@ -51,7 +52,16 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "Bearer"}
+    json = {"access_token": access_token, "token_type": "Bearer"}
+    response = JSONResponse(content=json)
+    value = f"Bearer {access_token}"
+    response.set_cookie(key="auth", value=value, httponly=True)
+    return response
+
+
+@router.get("/cookie")
+def get_cookie(auth: str = Cookie(default=None, include_in_schema=False)):
+    return {"access_token": auth}
 
 
 @router.get("/users/me", response_model=User)
