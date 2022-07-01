@@ -15,6 +15,7 @@ python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
 certifi = "^2022.6.15"
+fastapi-login = "^1.8.2"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.19.0"

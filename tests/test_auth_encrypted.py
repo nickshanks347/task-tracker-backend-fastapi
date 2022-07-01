@@ -42,7 +42,7 @@ with TestClient(app) as client:
         )
         assert response.status_code == 200
         access_token = response.json()["access_token"]
-        assert response.json() == {"access_token": access_token, "token_type": "Bearer"}
+        assert response.json() == {"access_token": access_token, "token_type": "bearer"}
         assert response.cookies.get("auth") == f'"Bearer {access_token}"'
 
     def test_login_user_wrong_password(set_env_vars_encrypted):

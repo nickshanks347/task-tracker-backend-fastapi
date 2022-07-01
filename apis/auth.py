@@ -52,7 +52,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    json = {"access_token": access_token, "token_type": "Bearer"}
+    json = {"access_token": access_token, "token_type": "bearer"}
     response = JSONResponse(content=json)
     value = f"Bearer {access_token}"
     response.set_cookie(key="auth", value=value, httponly=True)
