@@ -22,26 +22,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AuthCore(object):
-    def file_operations(operation, data=None):
-        DATA_DIR = Config.DATA_DIR
-        if Config.ENCRYPT_JSON:
-            with open(
-                Path(__file__).parent.parent / DATA_DIR / "users.json", "rb+"
-            ) as f:
-                return FileOps.file_operations_encrypted(operation, f, data)
-        else:
-            with open(Path(__file__).parent.parent / DATA_DIR / "users.json", "r+") as f:
-                return FileOps.file_operations_plain(operation, f, data)
-
-    def file_operations_register_user(id):
-        DATA_DIR = Config.DATA_DIR
-        if Config.ENCRYPT_JSON:
-            with open(Path(__file__).parent.parent / DATA_DIR / f"{id}.json", "wb") as f:
-                return FileOps.file_operations_encrypted("write", f, data={})
-        else:
-            with open(Path(__file__).parent.parent / DATA_DIR / f"{id}.json", "w") as f:
-                return FileOps.file_operations_plain("write", f, data={})
-
     def verify_password(plain_password, hashed_password):
         return pwd_context.verify(plain_password, hashed_password)
 

@@ -156,6 +156,7 @@ generate_postman.py
 
 # Private stuff
 /data/**
+/test/**
 !/data/__init__.py
 !/data/decrypt_encrypt.py
 !/data/config_example.env

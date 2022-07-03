@@ -12,21 +12,6 @@ from .fileops import FileOps
 class TodoCore(object):
     task_not_found = HTTPException(status_code=404, detail="Task not found")
 
-    def file_operations(current_user, operation, data=None):
-        DATA_DIR = Config.DATA_DIR
-        if Config.ENCRYPT_JSON:
-            with open(
-                Path(__file__).parent.parent / DATA_DIR / f"{current_user.id}.json",
-                "rb+",
-            ) as f:
-                return FileOps.file_operations_encrypted(operation, f, data)
-        else:
-            with open(
-                Path(__file__).parent.parent / DATA_DIR / f"{current_user.id}.json",
-                "r+",
-            ) as f:
-                return FileOps.file_operations_plain(operation, f, data)
-
     def get_all_todos(current_user):
         todos = TodoCore.file_operations(current_user, "read")
         return todos
