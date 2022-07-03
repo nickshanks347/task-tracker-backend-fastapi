@@ -6,15 +6,12 @@ authors = ["Nick <nick@tfsi.dev>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-colorama = "^0.4.5"
 fastapi = "^0.78.0"
 python-dotenv = "^0.20.0"
-cryptography = "^37.0.3"
 passlib = "^1.7.4"
 python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
-certifi = "^2022.6.15"
 SQLAlchemy = "^1.4.39"
 
 [tool.poetry.dev-dependencies]
