@@ -1,10 +1,8 @@
 from core.auth import AuthCore
+from core.db import crud
+from core.db.database import SessionLocal
+from core.db.schemas import Todo, TodoBase, TodoCreate, TodoUpdate, User
 from fastapi import APIRouter, Depends, HTTPException
-
-from core.db.schemas import Todo, User
-from core.db.schemas import TodoBase, TodoCreate, TodoUpdate
-from core.db import crud, models, schemas
-from core.db.database import SessionLocal, engine
 from sqlalchemy.orm import Session
 
 router = APIRouter()

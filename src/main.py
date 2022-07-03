@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+
 from apis import router as router
 from core.config import Config
-from core.db import models, schemas
-from core.db.database import SessionLocal, engine
+from core.db import models
+from core.db.database import engine
 
 models.Base.metadata.create_all(bind=engine)
 

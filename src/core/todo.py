@@ -1,11 +1,7 @@
 import datetime
 import uuid
-from pathlib import Path
 
 from fastapi import HTTPException
-
-from core.config import Config
-
 
 
 class TodoCore(object):

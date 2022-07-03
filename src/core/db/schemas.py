@@ -11,7 +11,7 @@ class TodoCreate(TodoBase):
     id: str
     created_at: str
 
-    class Config: 
+    class Config:
         orm_mode = True
 
 

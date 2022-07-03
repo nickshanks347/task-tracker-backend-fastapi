@@ -1,18 +1,13 @@
-import uuid
 from datetime import timedelta
 
 from core.auth import AuthCore
 from core.config import Config
+from core.db import crud
+from core.db.database import SessionLocal
+from core.db.schemas import Token, User, UserBase, UserId
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-
-from core.db.schemas import Token, User, UserBase, UserId
-from core.db.schemas import Todo, User
-from core.db.schemas import TodoBase, TodoCreate, TodoUpdate
-from core.db import crud, models, schemas
-from core.db.database import SessionLocal, engine
 
 router = APIRouter()
 

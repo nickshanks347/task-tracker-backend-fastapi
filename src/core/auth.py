@@ -1,17 +1,15 @@
 from datetime import datetime, timedelta
 
-
-from core.db.schemas import TokenData, UserCreate
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-
 from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from core.db.database import SessionLocal
 
 from core.config import Config
 from core.db import crud
+from core.db.database import SessionLocal
+from core.db.schemas import UserCreate
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
