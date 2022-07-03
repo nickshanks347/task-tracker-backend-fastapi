@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from apis import router as router
 from core.config import Config
+from core.db import models, schemas
+from core.db.database import SessionLocal, engine
+
+models.Base.metadata.create_all(bind=engine)
 
 RELOAD = Config.RELOAD
 HOST = Config.HOST

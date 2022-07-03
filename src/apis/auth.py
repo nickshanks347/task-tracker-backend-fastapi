@@ -6,64 +6,54 @@ from core.config import Config
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
 
-from .models.auth import Token, User
+from core.db.schemas import Token, User, UserBase, UserId
+from core.db.schemas import Todo, User
+from core.db.schemas import TodoBase, TodoCreate, TodoUpdate
+from core.db import crud, models, schemas
+from core.db.database import SessionLocal, engine
 
 router = APIRouter()
 
 
-@router.post("/register", status_code=201, response_model=User)
-def register(form_data: OAuth2PasswordRequestForm = Depends(), disabled: bool = False):
-    if Config.ENABLE_REGISTRATIONS:
-        user_db = AuthCore.file_operations("read")
-        if form_data.username in user_db:
-            raise HTTPException(status_code=400, detail="Username already registered")
-        user_db[form_data.username] = {
-            "username": form_data.username,
-            "hashed_password": AuthCore.hash_password(form_data.password),
-            "id": str(uuid.uuid4()),
-            "disabled": disabled,
-        }
-        AuthCore.file_operations("write", user_db)
-        AuthCore.file_operations_register_user(user_db[form_data.username]["id"])
-        return User(
-            username=form_data.username,
-            id=user_db[form_data.username]["id"],
-            disabled=user_db[form_data.username]["disabled"],
-        )
-    else:
-        raise HTTPException(status_code=400, detail="Registrations are disabled")
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-@router.post("/token", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = AuthCore.authenticate_user(
-        AuthCore.file_operations("read"), form_data.username, form_data.password
-    )
+@router.post("/register", response_model=UserBase)
+def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = crud.get_user(db, form_data.username)
+    if user:
+        raise HTTPException(status_code=400, detail="User already registered")
+    hashed_password = AuthCore.hash_password(form_data.password)
+    user = crud.create_user(db, form_data, hashed_password)
+    return user
+
+
+@router.post("/login", response_model=Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = crud.get_user(db, form_data.username)
     if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    if user.disabled:
-        raise HTTPException(status_code=401, detail="User is disabled")
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    if not AuthCore.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = timedelta(minutes=Config.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    json = {"access_token": access_token, "token_type": "bearer"}
-    response = JSONResponse(content=json)
-    value = f"Bearer {access_token}"
-    response.set_cookie(key="auth", value=value, httponly=True)
-    return response
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me", response_model=User)
-def get_current_user(current_user: User = Depends(AuthCore.get_current_user)):
+@router.get("/users/me", response_model=UserBase)
+def get_user(current_user: User = Depends(AuthCore.get_current_user)):
     return current_user
 
 
-@router.get("/users/me/id")
-def get_current_user_id(current_user: User = Depends(AuthCore.get_current_user)):
-    return {"id": current_user.id}
+@router.get("/users/me/id", response_model=UserId)
+def get_user_id(current_user: User = Depends(AuthCore.get_current_user)):
+    return current_user

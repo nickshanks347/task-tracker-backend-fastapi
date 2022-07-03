@@ -1,73 +1,48 @@
 from core.auth import AuthCore
-from core.todo import TodoCore
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
-from .models.auth import User
-from .models.todo import TaskRequest, TaskResponse, UpdateTaskRequest
+from core.db.schemas import Todo, User
+from core.db.schemas import TodoBase, TodoCreate, TodoUpdate
+from core.db import crud, models, schemas
+from core.db.database import SessionLocal, engine
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
 
-@router.get(
-    "/",
-    status_code=200,
-    responses={200: {"description": "Success", "model": TaskResponse}},
-)
-def get_all_todos(current_user: User = Depends(AuthCore.get_current_user)):
-    return TodoCore.get_all_todos(current_user)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-@router.post(
-    "/",
-    response_model=TaskResponse,
-    status_code=201,
-    responses={201: {"description": "Created", "model": TaskResponse}},
-)
-def create_todo(
-    task: TaskRequest, current_user: User = Depends(AuthCore.get_current_user)
-):
-    return TodoCore.create_todo(task, current_user)
+@router.get("/")
+def get_all_todos(current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
+    return crud.get_todos(db, current_user.id)
 
 
-@router.get(
-    "/{id}",
-    status_code=200,
-    responses={
-        404: {"description": "Task not found"},
-        200: {"description": "Successful", "model": TaskResponse},
-    },
-)
-def get_todo(id: str, current_user: User = Depends(AuthCore.get_current_user)):
-    return TodoCore.get_todo(id, current_user)
+@router.post("/", response_model=TodoCreate)
+def create_todo(todo: TodoBase, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
+    return crud.create_todo(db, todo=todo, user_id=current_user.id)
 
 
-@router.put(
-    "/{id}",
-    response_model=TaskResponse,
-    status_code=200,
-    responses={
-        404: {"description": "Task not found"},
-        200: {"description": "Updated", "model": TaskResponse},
-    },
-)
-def update_todo(
-    id: str,
-    task: UpdateTaskRequest,
-    current_user: User = Depends(AuthCore.get_current_user),
-):
-    return TodoCore.update_todo(id, task, current_user)
+@router.get("/{id}", response_model=Todo)
+def get_todo(id: str, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
+    todo = crud.get_todo(db, current_user.id, id)
+    if todo:
+        return todo
+    else:
+        raise HTTPException(status_code=404, detail="Todo not found")
 
 
-@router.delete(
-    "/{id}",
-    status_code=200,
-    responses={
-        404: {"description": "Task not found"},
-        200: {
-            "description": "Deleted",
-            "content": {"application/json": {"example": {"message": "Task deleted"}}},
-        },
-    },
-)
-def delete_todo(id: str, current_user: User = Depends(AuthCore.get_current_user)):
-    return TodoCore.delete_todo(id, current_user)
+@router.post("/{id}", response_model=TodoUpdate)
+def update_todo(id: str, todo: TodoBase, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
+    return crud.update_todo(db, id=id, todo=todo, user_id=current_user.id)
+
+
+@router.delete("/{id}")
+def delete_todo(id: str, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
+    crud.delete_todo(db, id=id, user_id=current_user.id)
+    return {"message": "Todo deleted"}

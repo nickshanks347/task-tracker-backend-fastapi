@@ -6,7 +6,6 @@ from fastapi import HTTPException
 
 from core.config import Config
 
-from .fileops import FileOps
 
 
 class TodoCore(object):

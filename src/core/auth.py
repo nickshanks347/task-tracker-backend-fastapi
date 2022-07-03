@@ -1,24 +1,29 @@
 from datetime import datetime, timedelta
-from pathlib import Path
 
-from apis.models.auth import (
-    TokenData,
-    UserInDB,
-    OAuth2PasswordBearerCookie as OAuth2PasswordBearer,
-)
+
+from core.db.schemas import TokenData, UserCreate
 from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 
-# from fastapi.security import OAuth2PasswordBearerCookie as OAuth2PasswordBearer
 from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
+from sqlalchemy.orm import Session
+from core.db.database import SessionLocal
 
 from core.config import Config
+from core.db import crud
 
-from .fileops import FileOps
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class AuthCore(object):
@@ -52,9 +57,9 @@ class AuthCore(object):
     def get_user(db, username: str):
         if username in db:
             user_dict = db[username]
-            return UserInDB(**user_dict)
+            return UserCreate(**user_dict)
 
-    def get_current_user(token: str = Depends(oauth2_scheme)):
+    def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
         credentials_exception = HTTPException(
             status_code=401,
             detail="Could not validate credentials",
@@ -72,14 +77,11 @@ class AuthCore(object):
             username: str = payload.get("sub")
             if username is None:
                 raise credentials_exception
-            token_data = TokenData(username=username)
         except ExpiredSignatureError:
             raise token_expired
         except JWTError:
             raise credentials_exception
-        user = AuthCore.get_user(
-            AuthCore.file_operations("read"), username=token_data.username
-        )
+        user = crud.get_user(db, username=username)
         if user is None:
             raise credentials_exception
         return user
