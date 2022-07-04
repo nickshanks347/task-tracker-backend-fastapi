@@ -1,3 +1,4 @@
+from typing import List
 from core.auth import AuthCore
 from core.db import crud
 from core.db.database import SessionLocal
@@ -16,12 +17,12 @@ def get_db():
         db.close()
 
 
-@router.get("/")
+@router.get("/", response_model=List[Todo])
 def get_all_todos(current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
     return crud.get_todos(db, current_user.id)
 
 
-@router.post("/", response_model=TodoCreate)
+@router.post("/", response_model=TodoCreate, status_code=201)
 def create_todo(todo: TodoBase, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
     return crud.create_todo(db, todo=todo, user_id=current_user.id)
 
@@ -35,12 +36,19 @@ def get_todo(id: str, current_user: User = Depends(AuthCore.get_current_user), d
         raise HTTPException(status_code=404, detail="Todo not found")
 
 
-@router.post("/{id}", response_model=TodoUpdate)
+@router.put("/{id}", response_model=TodoUpdate)
 def update_todo(id: str, todo: TodoBase, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
-    return crud.update_todo(db, id=id, todo=todo, user_id=current_user.id)
+    todo = crud.update_todo(db, id=id, todo=todo, user_id=current_user.id)
+    if todo:
+        return todo
+    else:
+        raise HTTPException(status_code=404, detail="Todo not found")
 
 
-@router.delete("/{id}")
+@router.delete("/{id}", responses={200: {"description": "Todo deleted", "content": {"application/json": {"example": {"message": "Task deleted"}}}}})
 def delete_todo(id: str, current_user: User = Depends(AuthCore.get_current_user), db: Session = Depends(get_db)):
-    crud.delete_todo(db, id=id, user_id=current_user.id)
-    return {"message": "Todo deleted"}
+    todo = crud.delete_todo(db, id=id, user_id=current_user.id)
+    if todo:
+        return {"message": "Todo deleted"}
+    else:
+        raise HTTPException(status_code=404, detail="Todo not found")

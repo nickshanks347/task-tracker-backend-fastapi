@@ -10,7 +10,7 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     id = Column(String, primary_key=True, index=True)
     hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
+    disabled = Column(Boolean, default=False)
 
     todos = relationship("Todo", back_populates="owner")
 

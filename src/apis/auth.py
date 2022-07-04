@@ -21,12 +21,14 @@ def get_db():
 
 
 @router.post("/register", response_model=UserBase)
-def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db), disabled: bool = False):
     user = crud.get_user(db, form_data.username)
+    if not Config.ENABLE_REGISTRATIONS:
+        raise HTTPException(status_code=400, detail="Registrations are disabled")
     if user:
         raise HTTPException(status_code=400, detail="User already registered")
     hashed_password = AuthCore.hash_password(form_data.password)
-    user = crud.create_user(db, form_data, hashed_password)
+    user = crud.create_user(db, form_data, hashed_password, disabled)
     return user
 
 
@@ -38,6 +40,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     if not AuthCore.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = timedelta(minutes=Config.ACCESS_TOKEN_EXPIRE_MINUTES)
+    if user.disabled:
+        raise HTTPException(status_code=401, detail="User is disabled")
     access_token = AuthCore.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )

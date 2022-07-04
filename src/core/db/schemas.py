@@ -41,7 +41,8 @@ class Todo(TodoBase):
 class UserBase(BaseModel):
     username: str
     id: str
-    disabled: bool | None = None
+    'create disabled with default value False'
+    disabled: bool = False
 
     class Config:
         orm_mode = True
