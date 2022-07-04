@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 from core.config import Config
 from core.db import crud
 from core.db.database import SessionLocal
-from core.db.schemas import UserCreate
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
@@ -31,20 +30,9 @@ class AuthCore(object):
     def hash_password(plain_password):
         return pwd_context.hash(plain_password)
 
-    def authenticate_user(user_db, username: str, password: str):
-        user = AuthCore.get_user(user_db, username)
-        if not user:
-            return False
-        if not AuthCore.verify_password(password, user.hashed_password):
-            return False
-        return user
-
     def create_access_token(data: dict, expires_delta: timedelta | None = None):
         to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.utcnow() + expires_delta
-        else:
-            expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + expires_delta
         to_encode.update({"exp": expire})
         to_encode.update({"iat": datetime.utcnow()})
         encoded_jwt = jwt.encode(
@@ -52,20 +40,10 @@ class AuthCore(object):
         )
         return encoded_jwt
 
-    def get_user(db, username: str):
-        if username in db:
-            user_dict = db[username]
-            return UserCreate(**user_dict)
-
     def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
         credentials_exception = HTTPException(
             status_code=401,
             detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-        token_expired = HTTPException(
-            status_code=401,
-            detail="Token has expired",
             headers={"WWW-Authenticate": "Bearer"},
         )
         try:
@@ -73,13 +51,7 @@ class AuthCore(object):
                 token, Config.JWT_SECRET_KEY, algorithms=[Config.ALGORITHM]
             )
             username: str = payload.get("sub")
-            if username is None:
-                raise credentials_exception
-        except ExpiredSignatureError:
-            raise token_expired
-        except JWTError:
+        except (ExpiredSignatureError, JWTError):
             raise credentials_exception
         user = crud.get_user(db, username=username)
-        if user is None:
-            raise credentials_exception
         return user
