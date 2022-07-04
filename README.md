@@ -55,7 +55,6 @@ ENCRYPT_JSON=1
 RELOAD=1
 HOST=0.0.0.0
 PORT=8000
-DATA_DIR=data
 ```
 
 1. `JWT_SECRET_KEY` contains the secret key for the JWT authentication scheme.
@@ -65,7 +64,6 @@ DATA_DIR=data
 5. `RELOAD` contains whether or not the application should reload the Python files on saving (usually only enabled for debugging/development).
 6. `HOST` contains the hostname to bind the application to.
 7. `PORT` contains the port to bind the application to.
-8. `DATA_DIR` contains the directory to store the data in.
 
 When the application starts, it will use `python-dotenv` to set the environment variables listed above. The application then reads the required environment variables and loads them into the application.
 
