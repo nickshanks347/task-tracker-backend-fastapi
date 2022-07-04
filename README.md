@@ -47,11 +47,9 @@ Included in the repository is a `config_example.env`, stored in the data directo
 
 ```env
 JWT_SECRET_KEY=secret
-JSON_SECRET_KEY=secret
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ENABLE_REGISTRATIONS=1
-ENCRYPT_JSON=1
 RELOAD=1
 HOST=0.0.0.0
 PORT=8000
@@ -92,7 +90,7 @@ The application is available on DockerHub at <https://hub.docker.com/r/nickshank
 Using the environment variables above, you can run the Docker image with the following command:
 
 ```bash
-docker run -p 8000:8000 --name todo-fastapi -e JWT_SECRET_KEY=secret -e ALGORITHM=HS256 -e ACCESS_TOKEN_EXPIRE_MINUTES=30 -e ENABLE_REGISTRATIONS=1 -e  RELOAD=0 -e HOST=0.0.0.0 -e PORT=8000 -v ./data:/code/data nickshanks347/todo-fastapi:latest
+docker run -p 8000:8000 --name todo-fastapi -e JWT_SECRET_KEY=secret -e ALGORITHM=HS256 -e ACCESS_TOKEN_EXPIRE_MINUTES=30 -e ENABLE_REGISTRATIONS=1 -e RELOAD=0 -e HOST=0.0.0.0 -e PORT=8000 -v $PWD/data:/code/data nickshanks347/todo-fastapi:latest
 ```
 
 **Again, be sure to use a secure value for `JWT_SECRET_KEY`.**
