@@ -46,7 +46,7 @@ with TestClient(app) as client:
         response = client.post("/api/auth/login", data={"username": "pytest" + rn, "password": "wrong"})
         assert response.status_code == 400
         assert response.json() == {"detail": "Incorrect username or password"}
-    
+
     def test_login_user_wrong_username():
         response = client.post("/api/auth/login", data={"username": "wrong" + rn, "password": "pytest"})
         assert response.status_code == 400
