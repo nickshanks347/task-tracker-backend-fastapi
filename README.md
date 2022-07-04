@@ -2,7 +2,7 @@
 
 [![Build & Push](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml/badge.svg)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/main.yml) [![CodeQL](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/nickshanks347/task-tracker-backend-fastapi/actions/workflows/codeql-analysis.yml) [![codecov](https://codecov.io/gh/nickshanks347/task-tracker-backend-fastapi/branch/main/graph/badge.svg?token=toWh5loMI9)](https://codecov.io/gh/nickshanks347/task-tracker-backend-fastapi)
 
-This is a simple task tracker backend using FastAPI. It uses a simple bearer token authentication scheme but stores users/user files in JSON (with optional encryption).
+This is a simple task tracker backend using FastAPI. It uses a simple bearer token authentication scheme with SQLite as the database.
 
 ## Installation
 
@@ -55,61 +55,22 @@ ENCRYPT_JSON=1
 RELOAD=1
 HOST=0.0.0.0
 PORT=8000
-DATA_DIR=data
 ```
 
 1. `JWT_SECRET_KEY` contains the secret key for the JWT authentication scheme.
-2. `JSON_SECRET_KEY` contains the secret key for the JSON encryption scheme.
-3. `ALGORITHM` contains the algorithm for the JWT authentication scheme.
-4. `ACCESS_TOKEN_EXPIRE_MINUTES` contains the number of minutes the access token is valid for.
-5. `ENABLE_REGISTRATIONS` contains whether or not registrations are enabled.
-6. `ENCRYPT_JSON` contains whether or not JSON files are encrypted.
-7. `RELOAD` contains whether or not the application should reload the Python files on-save (usually only enabled for debugging/development)
-8. `HOST` contains the hostname to bind the application to.
-9. `PORT` contains the port to bind the application to.
-10. `DATA_DIR` contains the directory to store the data in.
+2. `ALGORITHM` contains the algorithm for the JWT encryption scheme.
+3. `ACCESS_TOKEN_EXPIRE_MINUTES` contains the number of minutes the access token is valid for.
+4. `ENABLE_REGISTRATIONS` contains whether or not registrations are enabled.
+5. `RELOAD` contains whether or not the application should reload the Python files on saving (usually only enabled for debugging/development).
+6. `HOST` contains the hostname to bind the application to.
+7. `PORT` contains the port to bind the application to.
 
 When the application starts, it will use `python-dotenv` to set the environment variables listed above. The application then reads the required environment variables and loads them into the application.
-
----
-
-### Encryption/Decryption
-
-**You should not use an insecure value for `JWT_SECRET_KEY` or `JSON_SECRET_KEY`, nor should you use the default value "`secret`"**.
-
-Toggle `ENCRYPT_JSON` to enable encrypted/decrypted JSON files:
-
-- If the files already exist, use `decrypt_encrypt.py` so the contents are either encrypted/decrypted before the program starts.
-- If the files don't exist, the application will create them automatically in `DATA_DIR` and encrypt them depending on the value of `ENCRYPT_JSON`.
 
 To generate a secure value for `JWT_SECRET_KEY`, use the following command:
 
 ```bash
 openssl rand -hex 32
-```
-
-To generate a secure value for `JSON_SECRET_KEY`, use the following command:
-
-```bash
-openssl rand -hex 16
-```
-
-Note: **`JSON_SECRET_KEY` needs a 32-bit key.**
-
-A file to encrypt/decrypt JSON files is stored in the `data` directory. It is called `decrypt_encrypt.py`.
-
-The file will read the `JSON_SECRET_KEY` from the `config.env` file and use it to encrypt/decrypt all JSON files in the `data` directory.
-
-To encrypt all JSON files, use the following command:
-
-```bash
-python3 decrypt_encrypt.py --encrypt
-```
-
-To decrypt all JSON files, use the following command:
-
-```bash
-python3 decrypt_encrypt.py --decrypt
 ```
 
 ---
@@ -131,10 +92,10 @@ The application is available on DockerHub at <https://hub.docker.com/r/nickshank
 Using the environment variables above, you can run the Docker image with the following command:
 
 ```bash
-docker run -p 8000:8000 --name todo-fastapi -e JWT_SECRET_KEY=secret -e JSON_SECRET_KEY=secret -e ALGORITHM=HS256 -e ACCESS_TOKEN_EXPIRE_MINUTES=30 -e ENABLE_REGISTRATIONS=true -e ENCRYPT_JSON=true -v ./data:/code/data nickshanks347/todo-fastapi:latest
+docker run -p 8000:8000 --name todo-fastapi -e JWT_SECRET_KEY=secret -e ALGORITHM=HS256 -e ACCESS_TOKEN_EXPIRE_MINUTES=30 -e ENABLE_REGISTRATIONS=1 -e  RELOAD=0 -e HOST=0.0.0.0 -e PORT=8000 -v ./data:/code/data nickshanks347/todo-fastapi:latest
 ```
 
-**Again, be sure to use a secure value for `JWT_SECRET_KEY` and `JSON_SECRET_KEY`.**
+**Again, be sure to use a secure value for `JWT_SECRET_KEY`.**
 
 ### Building Docker image
 

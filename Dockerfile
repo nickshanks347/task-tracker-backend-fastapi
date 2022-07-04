@@ -10,6 +10,8 @@ RUN poetry config virtualenvs.create false
 
 RUN poetry install --no-interaction --no-dev
 
-COPY ./ /code
+ADD ./src /code/src/
+
+WORKDIR /code/src
 
 CMD ["python", "main.py"]
